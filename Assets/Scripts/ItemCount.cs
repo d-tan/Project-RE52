@@ -33,7 +33,7 @@ public class ItemCount : MonoBehaviour {
 			} else {
 				itemCount--;
 			}
-			Destroy (other);
+			Destroy (other.gameObject);
 			SetCountText (itemCount);
 		}
 	}
