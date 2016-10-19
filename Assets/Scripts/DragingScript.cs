@@ -21,7 +21,7 @@ public class DragingScript : MonoBehaviour
 	private float timer = 0.0f;
 	private float minflickTime = 0.5f;
 	private float minflickDist = 1.5f;
-	private float flickTimeMultiplier = 0.5f + 3.5f;
+	private float flickTimeMultiplier = 0.5f + 4.0f;
 
 	private Vector3 flickOrigin = Vector3.zero;
 
@@ -35,40 +35,40 @@ public class DragingScript : MonoBehaviour
 	void Update()
 	{
 
-		//***********************
-		// *** CLICK TO DRAG ****
-		//***********************
-
-		#if UNITY_EDITOR
-		//first frame when user click left mouse
-		if (Input.GetMouseButtonDown (0)) {
-			//convert mouse click position to a ray
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-
-			//if ray hit a Collider ( not 2DCollider)
-			if (Physics.Raycast (ray, out hit)) {
-				gameObjectTodrag = hit.collider.gameObject;
-				GOcenter = gameObjectTodrag.transform.position;
-				touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-				offset = touchPosition - GOcenter;
-				draggingMode = true;
-			}
-		}
-
-		//every frame when user hold on left mouse
-		if (Input.GetMouseButton (0)) {
-			if (draggingMode) {
-				touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-				newGOCenter = touchPosition - offset;
-				gameObjectTodrag.transform.position = new Vector3 (newGOCenter.x, newGOCenter.y, GOcenter.z);
-			}
-		}
-
-		//when mouse is released
-		if (Input.GetMouseButtonUp (0)) {
-			draggingMode = false;
-		}
-		#endif
+//		//***********************
+//		// *** CLICK TO DRAG ****
+//		//***********************
+//
+//		#if UNITY_EDITOR
+//		//first frame when user click left mouse
+//		if (Input.GetMouseButtonDown (0)) {
+//			//convert mouse click position to a ray
+//			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+//
+//			//if ray hit a Collider ( not 2DCollider)
+//			if (Physics.Raycast (ray, out hit)) {
+//				gameObjectTodrag = hit.collider.gameObject;
+//				GOcenter = gameObjectTodrag.transform.position;
+//				touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+//				offset = touchPosition - GOcenter;
+//				draggingMode = true;
+//			}
+//		}
+//
+//		//every frame when user hold on left mouse
+//		if (Input.GetMouseButton (0)) {
+//			if (draggingMode) {
+//				touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+//				newGOCenter = touchPosition - offset;
+//				gameObjectTodrag.transform.position = new Vector3 (newGOCenter.x, newGOCenter.y, GOcenter.z);
+//			}
+//		}
+//
+//		//when mouse is released
+//		if (Input.GetMouseButtonUp (0)) {
+//			draggingMode = false;
+//		}
+//		#endif
 
 		//***********************
 		// *** TOUCH TO DRAG ****
@@ -84,7 +84,7 @@ public class DragingScript : MonoBehaviour
 
 				//if ray hit a Collider ( not 2DCollider)
 				// if (Physics.Raycast(ray, out hit))
-				if (Physics.SphereCast (ray, 0.3f, out hit)) {
+				if (Physics.SphereCast (ray, 0.1f, out hit)) {
 					if (hit.transform.tag == "PickUpable") {
 						gameObjectTodrag = hit.collider.gameObject;
 						GOcenter = gameObjectTodrag.transform.position;
@@ -96,16 +96,18 @@ public class DragingScript : MonoBehaviour
 
 						timer = 0.0f;
 
-						SetRBVelZero (gameObjectTodrag);
+//						SetRBVelZero (gameObjectTodrag);
 					}
 				}
 				break;
 
 			case TouchPhase.Moved:
 				if (draggingMode) {
-					touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-					newGOCenter = touchPosition - offset;
-					gameObjectTodrag.transform.position = new Vector3 (newGOCenter.x, newGOCenter.y, GOcenter.z);
+					if (gameObjectTodrag) {
+						touchPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+						newGOCenter = touchPosition - offset;
+						gameObjectTodrag.transform.position = new Vector3 (newGOCenter.x, newGOCenter.y, GOcenter.z);
+					}
 				}
 				Debug.Log (timer);
 				break;
@@ -113,20 +115,22 @@ public class DragingScript : MonoBehaviour
 			case TouchPhase.Ended:
 				draggingMode = false;
 
-				if (timer < minflickTime) {
-					Debug.Log ("time: " + timer + " minTime: " + minflickTime);
-					float timeTaken = timer;
-					Vector3 currentTouchPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-					if (Vector3.Distance (flickOrigin, currentTouchPos) > minflickDist) {
-						Debug.Log (Vector3.Distance (flickOrigin, currentTouchPos));
-						Rigidbody rb = gameObjectTodrag.GetComponent<Rigidbody> ();
+				if (gameObjectTodrag) {
+					if (timer < minflickTime) {
+//						Debug.Log ("time: " + timer + " minTime: " + minflickTime);
+						float timeTaken = timer;
+						Vector3 currentTouchPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+						if (Vector3.Distance (flickOrigin, currentTouchPos) > minflickDist) {
+//							Debug.Log (Vector3.Distance (flickOrigin, currentTouchPos));
+							Rigidbody rb = gameObjectTodrag.GetComponent<Rigidbody> ();
 
-						Vector3 heading = currentTouchPos - flickOrigin;
-						Debug.Log ("Heading is: " + heading);
-						if (rb != null) {
-							rb.velocity += heading * flickTimeMultiplier/Mathf.Clamp(timeTaken, 0.7f, flickTimeMultiplier);
-						} else {
-							Debug.Log ("Pick up object has not rigidbody");
+							Vector3 heading = currentTouchPos - flickOrigin;
+//							Debug.Log ("Heading is: " + heading);
+							if (rb != null) {
+								rb.velocity += heading * flickTimeMultiplier / Mathf.Clamp (timeTaken, 0.3f, flickTimeMultiplier);
+							} else {
+								Debug.Log ("Pick up object has not rigidbody");
+							}
 						}
 					}
 				}

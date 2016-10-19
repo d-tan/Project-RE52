@@ -10,9 +10,12 @@ public enum RubbishType {
 public class RubbishItem : MonoBehaviour {
 
 	public RubbishType myType;
+	public float beltSpeed = 0.5f;
+
+	private Rigidbody itemRB;
 
 	void Start() {
-		
+		itemRB = GetComponent<Rigidbody> ();
 	}
 
 	public RubbishType ThisRubbishType {
@@ -25,9 +28,5 @@ public class RubbishItem : MonoBehaviour {
 	void Update() {
 
 	}
-
-
-	private void PickUp() {
 		
-	}
 }
