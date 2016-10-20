@@ -27,13 +27,13 @@ public class ItemCount : MonoBehaviour {
 		
 	}
 
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerEnter2D (Collider2D other) {
 		
 		// Get script from item
 		RubbishItem script = other.GetComponent<RubbishItem> ();
 
 		// Check if it's a rubbish item
-		if (script != null) {
+		if (script) {
 
 			// Check if the types match
 			if (script.ThisRubbishType == acceptedType) {

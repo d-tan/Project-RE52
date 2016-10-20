@@ -15,14 +15,14 @@ public class RubbishItemSpawner : MonoBehaviour {
 
 	Vector3 beltSize;
 	Vector3 beltPos;
-	Collider beltCollider;
+	Collider2D beltCollider;
 
 	// Use this for initialization
 	void Start () {
-		beltCollider = GetComponent<Collider> ();
+		beltCollider = GetComponent<Collider2D> ();
 
 		beltPos = this.transform.position;
-		beltSize = beltCollider.bounds.size;
+		beltSize = beltCollider.bounds.extents;
 
 		StartCoroutine (SpawnItems());
 	}
@@ -39,38 +39,45 @@ public class RubbishItemSpawner : MonoBehaviour {
 			yield return new WaitForSeconds (Random.value + spawnTimebuffer);
 
 			// pick a random location
-			float spawnPosX = Random.Range (beltPos.x - beltSize.x / 2, beltPos.x + beltSize.x / 2);
+			float spawnPosX = Random.Range ((beltPos.x - beltSize.x), (beltPos.x + beltSize.x));
 			float spawnPosY = beltCollider.transform.position.y - beltSize.y/2;
-
-//			Debug.Log ("positions: " + new Vector2(spawnPosX, spawnPosY));
 
 			// Pick random Item
 			int index = (int)Mathf.Clamp(Mathf.Floor(Random.Range (0.0f, items.Length)), 0.0f, items.Length - 1);
 
 			GameObject spawnedObject = Instantiate (
 				items[index], 
-				new Vector3 (spawnPosX, spawnPosY, beltPos.z - 0.3f), 
+				new Vector3 (spawnPosX, spawnPosY, beltPos.z), 
 				Quaternion.identity, 
 				parentObject.transform
 			) as GameObject;
+
+			Collider2D spawnedObjectCollider = spawnedObject.GetComponent<Collider2D> ();
+			spawnedObject.transform.position = new Vector3 (Mathf.Clamp (
+				spawnedObject.transform.position.x,
+				(beltPos.x - beltSize.x) + spawnedObjectCollider.bounds.size.x,
+				(beltPos.x + beltSize.x) - spawnedObjectCollider.bounds.size.x),
+				spawnedObject.transform.position.y,
+				spawnedObject.transform.position.z
+			);
 		}
 	}
 
 
-	void OnTriggerEnter (Collider other){
+	void OnTriggerEnter2D (Collider2D other){
 		AddVelocityToItem (other, beltSpeed);
 	}
 
-	void OnTriggerExit(Collider other) {
+	void OnTriggerExit2D (Collider2D other) {
 		AddVelocityToItem (other, -beltSpeed);
 	}
 
-	void AddVelocityToItem(Collider other, float velocityY) {
+	void AddVelocityToItem(Collider2D other, float velocityY) {
 		if (other.CompareTag ("PickUpable")) {
-			Rigidbody rb = other.GetComponent<Rigidbody> ();
+			Rigidbody2D rb = other.GetComponent<Rigidbody2D> ();
 
 			if (rb) {
-				rb.velocity += new Vector3 (0.0f, velocityY, 0.0f);
+				rb.velocity += new Vector2 (0.0f, velocityY);
 			} else {
 				Debug.Log ("This item, " + other.ToString() + ", does not have a rigidbody");
 			}

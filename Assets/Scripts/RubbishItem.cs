@@ -12,10 +12,12 @@ public class RubbishItem : MonoBehaviour {
 	public RubbishType myType;
 	public float beltSpeed = 0.5f;
 
-	private Rigidbody itemRB;
+	private Collider2D itemCollider;
 
 	void Start() {
-		itemRB = GetComponent<Rigidbody> ();
+		itemCollider = GetComponent<Collider2D> ();
+
+		Debug.Log (itemCollider.bounds.size);
 	}
 
 	public RubbishType ThisRubbishType {

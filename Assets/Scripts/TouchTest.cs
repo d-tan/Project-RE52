@@ -3,11 +3,22 @@ using System.Collections;
 
 public class TouchTest : MonoBehaviour {
 
-	Ray ray;
 
 	bool isHolding = false;
 
 	GameObject heldObject;
+	RaycastHit2D hit;
+
+	Vector3 touchPos;
+	Vector3 heldObjectCentre;
+//	Vector3 newHeldObjectCentre;
+
+	private float timer = 0.0f;
+	private float minflickTime = 0.5f;
+	private float minflickDist = 1.5f;
+	private float flickTimeMultiplier = 0.5f + 4.0f;
+	private float minFlickMulitplier = 0.5f;
+	private Vector3 flickOrigin = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
@@ -28,43 +39,70 @@ public class TouchTest : MonoBehaviour {
 //			}
 //		}
 
+		timer += Time.deltaTime;
+
 		if (Input.touchCount > 0) {
+			switch (Input.GetTouch (0).phase) {
+			case TouchPhase.Began:
+				Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch (0).position);
+				hit = Physics2D.CircleCast ((Vector2)ray.origin, 0.05f, (Vector2)ray.direction);
+//				Debug.Log ("Ray: " + ray + " hit: " + hit);
+				if (hit) {
+					Debug.Log (hit.transform.name);
+					if (hit.transform.CompareTag ("PickUpable")) {
+						heldObject = hit.transform.gameObject;
+						heldObjectCentre = heldObject.transform.position;
+						touchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+						isHolding = true;
+						timer = 0.0f;
 
-//			RaycastHit2D[] hit;
-
-//			if (Input.GetTouch (0).phase == TouchPhase.Began) {
-				// Get Ray from touch input
-				ray = Camera.main.ScreenPointToRay (Input.GetTouch (0).position);
-				// Get all colliders hit by a 2D ray in the direction of the touch input
-			RaycastHit2D[] hit = Physics2D.RaycastAll ((Vector2)ray.origin, (Vector2)ray.direction);
-//			}
-
-			Debug.DrawRay (ray.origin, ray.direction * 20, Color.red); // Draw ray
-
-			if (hit.Length > 0) {
-				// Check if last (top) collider is null
-				if (hit [hit.Length - 1].collider != null) {
-				
-					if (!isHolding) {
-						Debug.Log (hit [hit.Length - 1].collider.name);
-
-						heldObject = hit [hit.Length - 1].collider.gameObject;
-						Debug.Log ("I'm holding " + heldObject.ToString ());
+						flickOrigin = touchPos;
+//						Debug.Log ("Began: " + touchPos);
 					}
-					
 				}
+				break;
+
+			case TouchPhase.Moved:
+				if (isHolding) {
+					if (heldObject) {
+						touchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+//						Debug.Log ("Moved: " + touchPos);
+						heldObject.transform.position = new Vector3 (touchPos.x, touchPos.y, heldObject.transform.position.z);
+
+					}
+				}
+				break;
+
+			case TouchPhase.Ended:
+				isHolding = false;
+
+				if (heldObject) {
+					if (timer < minflickTime) {
+						float timeTaken = timer;
+
+						Vector3 currentTouchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+
+						if (Vector2.Distance ((Vector2)flickOrigin, (Vector2)currentTouchPos) > minflickDist) {
+							
+							Rigidbody2D HOrb = heldObject.GetComponent<Rigidbody2D> ();
+							Vector3 heading = currentTouchPos - flickOrigin;
+
+							if (HOrb) {
+								HOrb.velocity += (Vector2)heading * flickTimeMultiplier / 
+									Mathf.Clamp (timeTaken, minFlickMulitplier, flickTimeMultiplier);
+							} else {
+								Debug.Log ("This item does not have a Rigidbody2D");
+							}
+						}
+					}
+				}
+				break;
+
+			case TouchPhase.Canceled:
+				isHolding = false;
+				break;
 			}
 
-			if (Input.GetTouch (0).phase == TouchPhase.Moved) {
-				if (heldObject != null) {
-					Debug.Log ("Moving " + heldObject.ToString () + " with position: " + heldObject.transform.position.ToString());
-					Debug.Log ("Moving to touch position: " + Input.GetTouch (0).position.ToString ());
-					heldObject.transform.position = new Vector3(Input.GetTouch (0).position.x, Input.GetTouch (0).position.y, 0f) * (11/641);
-				} else {
-					Debug.Log ("Held object is null");
-					isHolding = false;
-				}
-			}
 		}
 			
 	}

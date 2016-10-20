@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011966344986}
   - 212: {fileID: 212000011863490734}
-  - 135: {fileID: 135000010928796604}
-  - 54: {fileID: 54000011751086192}
   - 114: {fileID: 114000010097314748}
+  - 50: {fileID: 50000010415657380}
+  - 60: {fileID: 60000012945546134}
   m_Layer: 8
   m_Name: OrganicRubbish
   m_TagString: PickUpable
@@ -43,21 +43,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!54 &54000011751086192
-Rigidbody:
+--- !u!50 &50000010415657380
+Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012297426250}
-  serializedVersion: 2
+  m_UseAutoMass: 0
   m_Mass: 1
-  m_Drag: 0
+  m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_GravityScale: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!60 &60000012945546134
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012297426250}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: 0.5, y: -0.000000029802322}
+      - {x: 0, y: 0.5}
+      - {x: -0.5, y: 0}
+      - {x: -0.000000029802322, y: -0.5}
 --- !u!114 &114000010097314748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -71,18 +91,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myType: 1
   beltSpeed: 0.5
---- !u!135 &135000010928796604
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012297426250}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!212 &212000011863490734
 SpriteRenderer:
   m_ObjectHideFlags: 1
