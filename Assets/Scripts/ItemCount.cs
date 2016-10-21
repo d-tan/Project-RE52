@@ -28,23 +28,32 @@ public class ItemCount : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D (Collider2D other) {
-		
+		TriggerCount (other);
+	}
+
+	void OnTriggerStay2D (Collider2D other) {
+		TriggerCount (other);
+	}
+
+
+	void TriggerCount(Collider2D other) {
 		// Get script from item
-		RubbishItem script = other.GetComponent<RubbishItem> ();
+		RubbishItem otherScript = other.GetComponent<RubbishItem> ();
 
 		// Check if it's a rubbish item
-		if (script) {
-
-			// Check if the types match
-			if (script.ThisRubbishType == acceptedType) {
-				itemCount++;
-				StartCoroutine (CorrectFlash ());
-			} else {
-				itemCount--;
-				StartCoroutine (IncorrectFlash ());
+		if (otherScript) {
+			if (!otherScript.IsBeingHeld) {
+				// Check if the types match
+				if (otherScript.ThisRubbishType == acceptedType) {
+					itemCount++;
+					StartCoroutine (CorrectFlash ());
+				} else {
+					itemCount--;
+					StartCoroutine (IncorrectFlash ());
+				}
+				Destroy (other.gameObject);
+				SetCountText (itemCount);
 			}
-			Destroy (other.gameObject);
-			SetCountText (itemCount);
 		}
 	}
 
