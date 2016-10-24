@@ -119,7 +119,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 			RubbishItem otherScipt = other.GetComponent<RubbishItem> ();
 
 			if ((bool)rb && (bool)otherScipt) {
-				if (!otherScipt.IsBeingHeld) {
+				if (other.gameObject.layer != 9) { // 9 = "HeldItem" layer
 					rb.velocity = new Vector2 (0.0f, velocityY);
 				}
 			} else {
@@ -136,7 +136,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 		if (otherScipt) {
 			otherScipt.AtEnd = status;
 
-			if (status && !otherScipt.IsBeingHeld) {
+			if (status && (other.gameObject.layer != 9)) { // 9 = "HeldItem" layer
 				Rigidbody2D otherRB = other.GetComponent<Rigidbody2D> ();
 				otherRB.isKinematic = true;
 			}
