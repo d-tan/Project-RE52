@@ -45,14 +45,14 @@ public class ItemCount : MonoBehaviour {
 			if (!otherScript.IsBeingHeld) {
 				// Check if the types match
 				if (otherScript.ThisRubbishType == acceptedType) {
-					itemCount++;
+					ScoreManager.singleton.AddMinusScore (acceptedType, 1);
 					StartCoroutine (CorrectFlash ());
 				} else {
-					itemCount--;
+					ScoreManager.singleton.AddMinusScore (acceptedType, -1);
 					StartCoroutine (IncorrectFlash ());
 				}
 				Destroy (other.gameObject);
-				SetCountText (itemCount);
+//				SetCountText (itemCount);
 			}
 		}
 	}

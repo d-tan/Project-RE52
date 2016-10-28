@@ -49,7 +49,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 		yield return new WaitForSeconds (3.0f);
 
 		while (isSpawning) { // isSpawning
-			yield return new WaitForSeconds (Random.value + spawnTimebuffer);
+			yield return new WaitForSeconds (Random.value + Mathf.Abs(spawnTimebuffer));
 
 			// pick a random location
 			float spawnPosX = Random.Range ((beltPos.x - beltSize.x), (beltPos.x + beltSize.x));
