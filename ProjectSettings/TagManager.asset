@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PickUpable
   - ConveyorBelt
+  - ItemDatabase
   layers:
   - Default
   - TransparentFX

@@ -1,0 +1,181 @@
+[
+	{
+		"id" : 0,
+		"title" : "Battery",
+		"slug" : "battery",
+		"description" : "Small source of power.",
+		"rubbishType" : {
+			"type1" : 0,
+			"type2" : 0,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 1,
+		"title" : "Bush",
+		"slug" : "bush",
+		"description" : "An uprooted bush.",
+		"rubbishType" : {
+			"type1" : 1,
+			"type2" : 1,
+			"quantity1" : 15,
+			"quantity2" : 15
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 2,
+		"title" : "Cardboard Box",
+		"slug" : "cardboard_box",
+		"description" : "A weary box, once used for storing objects.",
+		"rubbishType" : {
+			"type1" : 2,
+			"type2" : 2,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 3,
+		"title" : "Generic General",
+		"slug" : "generic_general",
+		"description" : "A generic piece of general rubbish",
+		"rubbishType" : {
+			"type1" : 0,
+			"type2" : 0,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 4,
+		"title" : "Generic Organic",
+		"slug" : "generic_organic",
+		"description" : "A generic piece of organic rubbish",
+		"rubbishType" : {
+			"type1" : 1,
+			"type2" : 1,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 5,
+		"title" : "Generic Recycle",
+		"slug" : "generic_recycle",
+		"description" : "A generic piece of recycle rubbish.",
+		"rubbishType" : {
+			"type1" : 2,
+			"type2" : 2,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 6,
+		"title" : "Glass Bottle",
+		"slug" : "glass_bottle",
+		"description" : "An object for holding liquids.",
+		"rubbishType" : {
+			"type1" : 2,
+			"type2" : 2,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 7,
+		"title" : "Ham Shank",
+		"slug" : "ham_shank",
+		"description" : "A rotten ham shank.",
+		"rubbishType" : {
+			"type1" : 1,
+			"type2" : 1,
+			"quantity1" : 15,
+			"quantity2" : 15
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 8,
+		"title" : "Log",
+		"slug" : "log",
+		"description" : "A small part of a tree.",
+		"rubbishType" : {
+			"type1" : 1,
+			"type2" : 1,
+			"quantity1" : 50,
+			"quantity2" : 50
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 9,
+		"title" : "Newspaper",
+		"slug" : "newspaper",
+		"description" : "November 20XX, Earth Times' issue.",
+		"rubbishType" : {
+			"type1" : 2,
+			"type2" : 2,
+			"quantity1" : 10,
+			"quantity2" : 10
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 10,
+		"title" : "Pipe",
+		"slug" : "pipe",
+		"description" : "A sturdy tube for transporting liquids and gas.",
+		"rubbishType" : {
+			"type1" : 0,
+			"type2" : 0,
+			"quantity1" : 50,
+			"quantity2" : 50
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	},
+
+	{
+		"id" : 11,
+		"title" : "Tin Can",
+		"slug" : "tin_can",
+		"description" : "A tin can.",
+		"rubbishType" : {
+			"type1" : 0,
+			"type2" : 2,
+			"quantity1" : 20,
+			"quantity2" : 20
+		},
+		"craftingItem" : false,
+		"rarity" : 0
+	}
+]

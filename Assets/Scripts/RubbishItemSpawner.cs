@@ -5,20 +5,35 @@ using UnityEngine.UI;
 // MUST be attached to conveyor belt object.
 public class RubbishItemSpawner : MonoBehaviour {
 
+	public static RubbishItemSpawner singleton;
+
 	public GameObject[] items;
 	public GameObject parentSpawnObject;
-	float beltSpeed = 2.0f;
-	float spawnTimebuffer = 0.3f;
-	public Text beltText;
-	public Text spawnText;
+	public GameObject genericItem;
 
-	private bool thresholdHasReached = false;
+	private float beltSpeed = 2.0f; // Belt Speed details
+	private float initialBeltSpeed;
+	private float beltSpeedMax = 8.0f;
+
+	private float spawnTimeBuffer = 0.35f; // Spawn Time Buffer details
+	private float initialSpawnTimeBuffer;
+	private float spawnTimeBufferMin = -0.4f;
+
+	private bool thresholdHasReached = false; // Spawning details
 	private bool isSpawning = true;
 	private bool spawnItemRoutineActive = false;
 
 	Vector3 beltSize;
 	Vector3 beltPos;
 	Collider2D beltCollider;
+
+	ItemDatabase database;
+
+	void Awake() {
+		if (singleton == null) {
+			singleton = this;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +43,20 @@ public class RubbishItemSpawner : MonoBehaviour {
 		beltSize = beltCollider.bounds.extents;
 
 		StartCoroutine (SpawnItems());
+
+		initialBeltSpeed = beltSpeed; // hold the initial values
+		initialSpawnTimeBuffer = spawnTimeBuffer;
+
+		database = GameObject.FindGameObjectWithTag ("ItemDatabase").GetComponent<ItemDatabase> ();
+
+		GameObject tempObject = Instantiate (genericItem);
+		Item item = database.FetchItemByID (0);
+		tempObject.GetComponent<SpriteRenderer> ().sprite = item.Sprite;
+		RubbishType[] types = new RubbishType[2];
+		types [0] = item.Type1;
+		types [1] = item.Type2;
+		tempObject.GetComponent<RubbishItem> ().ThisRubbishTypes = types;
+		tempObject.AddComponent<PolygonCollider2D> ();
 	}
 	
 	// Update is called once per frame
@@ -46,10 +75,11 @@ public class RubbishItemSpawner : MonoBehaviour {
 	// Spawn Items on the conveyor belt
 	IEnumerator SpawnItems() {
 		spawnItemRoutineActive = true;
-		yield return new WaitForSeconds (3.0f);
+		yield return new WaitForSeconds (1.0f);
 
 		while (isSpawning) { // isSpawning
-			yield return new WaitForSeconds (Random.value + Mathf.Abs(spawnTimebuffer));
+			yield return new WaitForSeconds (
+				Mathf.Clamp(Random.value + spawnTimeBuffer, 0.05f, initialSpawnTimeBuffer + 1.0f));
 
 			// pick a random location
 			float spawnPosX = Random.Range ((beltPos.x - beltSize.x), (beltPos.x + beltSize.x));
@@ -66,7 +96,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 				                          parentSpawnObject.transform
 			                          ) as GameObject;
 
-			// Move the Item if it's off the edge
+			// Move the Item if it's on the edge
 			Collider2D spawnedObjectCollider = spawnedObject.GetComponent<Collider2D> ();
 			spawnedObject.transform.position = new Vector3 (Mathf.Clamp (
 				spawnedObject.transform.position.x,
@@ -144,31 +174,28 @@ public class RubbishItemSpawner : MonoBehaviour {
 	}
 
 
-
-
-
-	// --------------- UI Stuff ---------------
-	public void IncreaseBuffer() {
-		spawnTimebuffer += 0.1f;
-		spawnText.text = "SpawnBuffer: " + spawnTimebuffer;
+	public void ChangeSpawnTime() {
+		if (spawnTimeBuffer > spawnTimeBufferMin) {
+			if (ScoreManager.singleton.multiplier < 4) {
+				spawnTimeBuffer = Mathf.Clamp (
+					Mathf.Exp(-ScoreManager.singleton.multiplier), spawnTimeBufferMin, initialSpawnTimeBuffer);
+			} else {
+				spawnTimeBuffer = Mathf.Clamp(
+					initialSpawnTimeBuffer - Mathf.Exp (0.1f * ScoreManager.singleton.multiplier - 1.1f),
+					spawnTimeBufferMin, initialSpawnTimeBuffer);
+			}
+		}
 	}
 
-	public void DecreaseBuffer() {
-		spawnTimebuffer -= 0.1f;
-		spawnText.text = "SpawnBuffer: " + spawnTimebuffer;
+	public void SetNewBeltSpeed() {
+		if (beltSpeed < beltSpeedMax) {
+			beltSpeed = Mathf.Clamp(
+				Mathf.Exp(0.25f * ScoreManager.singleton.multiplier + 0.5f), initialBeltSpeed, beltSpeedMax);
+		}
 	}
 
-	public void IncreaseSpeed() {
-		beltSpeed += 0.1f;
-		beltText.text = "BeltSpeed: " + beltSpeed;
-	}
-
-	public void DecreaseSpeed() {
-		beltSpeed -= 0.1f;
-		beltText.text = "BeltSpeed: " + beltSpeed;
-	}
-
-	public void ToggleBelt() {
-		ToggleItemSpawn (!isSpawning);
+	public void ResetSpawnNSpeed() {
+		beltSpeed = initialBeltSpeed;
+		spawnTimeBuffer = initialSpawnTimeBuffer;
 	}
 }

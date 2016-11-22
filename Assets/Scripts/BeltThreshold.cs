@@ -5,32 +5,22 @@ public class BeltThreshold : MonoBehaviour {
 
 	bool thresholdReached = false;
 	float timer = 0.0f;
-	float waitTime = 1.0f;
+	float waitTime = 1.5f;
 
-	RubbishItemSpawner parentScript;
 	Collider2D basisCollider = null;
 
 	// Use this for initialization
 	void Start () {
-		parentScript = transform.parent.GetComponent<RubbishItemSpawner> ();
 
-		if (!parentScript) {
-			Debug.Log ("This is not my Parent, Human!");
-		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-
 		if (thresholdReached) {
-			if (parentScript) {
-				parentScript.ThresholdReached = true;
-			}
+			RubbishItemSpawner.singleton.ThresholdReached = true;
+
 		} else {
-			if (parentScript) {
-				parentScript.ThresholdReached = false;
-			}
+			RubbishItemSpawner.singleton.ThresholdReached = false;
 		}
 	}
 
@@ -54,18 +44,16 @@ public class BeltThreshold : MonoBehaviour {
 			if (DetectItemScript (other)) {
 				thresholdReached = true;
 			}
-
-			timer = 0.0f;
-			basisCollider = null;
 		}
 	}
 
 	void OnTriggerExit2D (Collider2D other) {
 		if (DetectItemScript(other)) {
-			thresholdReached = false;
 			if (basisCollider) {
 				if (basisCollider.Equals (other)) {
+					thresholdReached = false;
 					basisCollider = null;
+					timer = 0.0f;
 				}
 			}
 		}

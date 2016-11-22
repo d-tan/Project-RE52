@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012173119200}
   - 212: {fileID: 212000012284518758}
-  - 114: {fileID: 114000011505409564}
   - 50: {fileID: 50000013250916298}
   - 60: {fileID: 60000014079571990}
+  - 114: {fileID: 114000011207158460}
   m_Layer: 8
   m_Name: GeneralRubbish
   m_TagString: PickUpable
@@ -38,7 +38,7 @@ Transform:
   m_GameObject: {fileID: 1000012223437544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -7, z: 0}
-  m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ PolygonCollider2D:
       - {x: 0, y: 0.5}
       - {x: -0.5, y: 0}
       - {x: -0.000000029802322, y: -0.5}
---- !u!114 &114000011505409564
+--- !u!114 &114000011207158460
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -89,8 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e5cc995869c47ab8178e98e7326f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myType: 0
-  beltSpeed: 0.5
 --- !u!212 &212000012284518758
 SpriteRenderer:
   m_ObjectHideFlags: 1

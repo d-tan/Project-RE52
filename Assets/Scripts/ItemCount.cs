@@ -6,7 +6,7 @@ public class ItemCount : MonoBehaviour {
 
 	public Text itemCountText;
 
-	private int itemCount = 0;
+//	private int itemCount = 0;
 	private float flashTime = 0.2f;
 	private Renderer myRenderer;
 	private Color originalColour;
@@ -44,7 +44,7 @@ public class ItemCount : MonoBehaviour {
 		if (otherScript) {
 			if (!otherScript.IsBeingHeld) {
 				// Check if the types match
-				if (otherScript.ThisRubbishType == acceptedType) {
+				if (otherScript.ThisRubbishTypes[0] == acceptedType) {
 					ScoreManager.singleton.AddMinusScore (acceptedType, 1);
 					StartCoroutine (CorrectFlash ());
 				} else {
