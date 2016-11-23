@@ -11,7 +11,7 @@
 			"quantity2" : 10
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 2
 	},
 
 	{
@@ -131,7 +131,7 @@
 			"quantity2" : 50
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 1
 	},
 
 	{
@@ -146,7 +146,7 @@
 			"quantity2" : 10
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 3
 	},
 
 	{
@@ -161,7 +161,7 @@
 			"quantity2" : 50
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 1
 	},
 
 	{
@@ -176,6 +176,6 @@
 			"quantity2" : 20
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 1
 	}
 ]

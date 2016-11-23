@@ -308,8 +308,7 @@ MonoBehaviour:
   - {fileID: 1000012297426250, guid: 9470df1328dad4feda3b0b9ac66d590b, type: 2}
   - {fileID: 1000012223437544, guid: b03d0cc97e4134941ad098a5ed6793cb, type: 2}
   parentSpawnObject: {fileID: 0}
-  beltText: {fileID: 0}
-  spawnText: {fileID: 0}
+  shellItem: {fileID: 1000011239901804, guid: 619417a43246d4e7e918da71aeb81d93, type: 2}
 --- !u!212 &212000010615655282
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -12,13 +12,13 @@ public class Item {
 	public int Quantity1 { get; set; }
 	public int Quantity2 { get; set; }
 	public bool CraftingItem { get; set; }
-	public int Rarity { get; set; }
+	public ItemRarity Rarity { get; set; }
 
 	public bool Stackable { get; set; }
 
 	public Sprite Sprite { get; set; }
 
-	public Item(int id, string title, string slug, string desc, RubbishType type1, RubbishType type2, int quantity1, int quantity2, bool crafting, int rare) {
+	public Item(int id, string title, string slug, string desc, RubbishType type1, RubbishType type2, int quantity1, int quantity2, bool crafting, ItemRarity rare) {
 		this.ID = id;
 		this.Title = title;
 		this.Slug = slug;

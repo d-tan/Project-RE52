@@ -16,6 +16,7 @@ public class RubbishItem : MonoBehaviour {
 	private Rigidbody2D rb;
 	bool endOfConveyorbelt = false;
 	bool isHeld = false;
+	private int itemID;
 
 	void Start() {
 //		itemCollider = GetComponent<Collider2D> ();
@@ -33,6 +34,15 @@ public class RubbishItem : MonoBehaviour {
 		}
 		set {
 			myTypes = value;
+		}
+	}
+
+	public int RubbishItemID {
+		get {
+			return itemID;
+		}
+		set {
+			itemID = value;
 		}
 	}
 

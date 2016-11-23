@@ -23,7 +23,7 @@ public class ScoreManager : MonoBehaviour {
 	private bool isMuliplying = false;
 	private int itemsToNextLevel = 0;
 	private int currentItemStreak = 0;
-	private int accumulatedItemCount = 0; // accumlated items need for next level
+//	private int accumulatedItemCount = 0; // accumlated items need for next level
 	private float itemTimeValue = 0.75f; // the value of each item that is added to the timer
 
 	private int streakToStartMultiplier = 5; // Player need to get streak in limited time to start multiplier
@@ -134,6 +134,7 @@ public class ScoreManager : MonoBehaviour {
 
 	// Increases the multiplier and associated variables
 	private void IncreaseMultiplier() {
+		ToggleMultiplierUI (true);
 		StartCoroutine (MultiplierUIFlashColor ());
 
 		multiplier++;
@@ -182,6 +183,7 @@ public class ScoreManager : MonoBehaviour {
 
 		SetItemTimeValue ();
 //		SetItemsToNextMultiplier ();
+		StopCoroutine(MultiplierUITurnOff(Color.red));
 	}
 
 
@@ -189,7 +191,7 @@ public class ScoreManager : MonoBehaviour {
 	private void StopNResetMultiplier(Color multiplierStopColor) {
 		currentItemStreak = 0;
 		multiplier = 1;
-		accumulatedItemCount = 0;
+//		accumulatedItemCount = 0;
 		multiplierTimer = 5.0f;
 		StartCoroutine (MultiplierUITurnOff (multiplierStopColor));
 		isMuliplying = false;
