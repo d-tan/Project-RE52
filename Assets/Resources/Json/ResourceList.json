@@ -1,0 +1,74 @@
+[
+	{
+		"id" : 0,
+		"title" : "Building Materials",
+		"slug" : "building_materials",
+		"description" : "Sturdy materials used to make sturdy objects.",
+		"rubbishType" : 0
+	},
+
+	{
+		"id" : 1,
+		"title" : "Electronics",
+		"slug" : "electronics",
+		"description" : "Electronic parts.",
+		"rubbishType" : 0
+	},
+
+	{
+		"id" : 2,
+		"title" : "Fertaliser",
+		"slug" : "fertaliser",
+		"description" : "Composted materials to nuture the Earth.",
+		"rubbishType" : 1
+	},
+
+	{
+		"id" : 3,
+		"title" : "General Rubbish",
+		"slug" : "general_rubbish",
+		"description" : "Rubbish that has been identified with no use.",
+		"rubbishType" : 0,
+		"quantity" : 0
+	},
+
+	{
+		"id" : 4,
+		"title" : "Metal",
+		"slug" : "metal",
+		"description" : "Sturdy materials for sturdy roles.",
+		"rubbishType" : 2
+	},
+
+	{
+		"id" : 5,
+		"title" : "Paper",
+		"slug" : "paper",
+		"description" : "A piece of material used by humans",
+		"rubbishType" : 2
+	},
+
+	{
+		"id" : 6,
+		"title" : "Plants",
+		"slug" : "plants",
+		"description" : "Plant matter.",
+		"rubbishType" : 1
+	},
+
+	{
+		"id" : 7,
+		"title" : "Plastics",
+		"slug" : "plastics",
+		"description" : "A handy material for many uses.",
+		"rubbishType" : 2
+	},
+
+	{
+		"id" : 8,
+		"title" : "Textiles",
+		"slug" : "textiles",
+		"description" : "A piece of material used by humans.",
+		"rubbishType" : 2
+	}
+]

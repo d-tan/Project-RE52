@@ -7,7 +7,6 @@ public class RubbishItemSpawner : MonoBehaviour {
 
 	public static RubbishItemSpawner singleton;
 
-	public GameObject[] items;
 	public GameObject parentSpawnObject;
 	public GameObject shellItem;
 
@@ -30,7 +29,9 @@ public class RubbishItemSpawner : MonoBehaviour {
 	Vector3 beltPos;
 	Collider2D beltCollider;
 
-	ItemDatabase database;
+	ItemDatabase itemDatabase;
+	ResourceDatabase resourceDatabase;
+	GameUIManager UIManager;
 
 	void Awake() {
 		if (singleton == null) {
@@ -50,7 +51,9 @@ public class RubbishItemSpawner : MonoBehaviour {
 		initialBeltSpeed = beltSpeed; // hold the initial values
 		initialSpawnTimeBuffer = spawnTimeBuffer;
 
-		database = GameObject.FindGameObjectWithTag ("ItemDatabase").GetComponent<ItemDatabase> ();
+		itemDatabase = GameObject.FindGameObjectWithTag ("Databases").GetComponent<ItemDatabase> ();
+		resourceDatabase = GameObject.FindGameObjectWithTag ("Databases").GetComponent<ResourceDatabase> ();
+		UIManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameUIManager> ();
 	}
 	
 	// Update is called once per frame
@@ -79,19 +82,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 			float spawnPosX = Random.Range ((beltPos.x - beltSize.x), (beltPos.x + beltSize.x));
 			float spawnPosY = beltCollider.transform.position.y - beltSize.y;
 
-			// Pick random Item
-			int index = (int)Mathf.Clamp (Mathf.Floor (Random.Range (0.0f, items.Length)), 0.0f, items.Length - 1);
-
-			InstantiateItem (new Vector3 (spawnPosX, spawnPosY, beltPos.z), index);
-//			// Spawn the Item
-//			GameObject spawnedObject = Instantiate (
-//				                          items [index], 
-//				                          new Vector3 (spawnPosX, spawnPosY, beltPos.z), 
-//				                          Quaternion.identity, 
-//				                          parentSpawnObject.transform
-//			                          ) as GameObject;
-
-
+			InstantiateItem (new Vector3 (spawnPosX, spawnPosY, beltPos.z));
 		}
 
 		spawnItemRoutineActive = false;
@@ -108,7 +99,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 		}
 	}
 
-	private void InstantiateItem (Vector3 spawnPos, int index) {
+	private void InstantiateItem (Vector3 spawnPos) {
 		GameObject spawnedObject = Instantiate (
 			shellItem, 
 			spawnPos, 
@@ -116,21 +107,27 @@ public class RubbishItemSpawner : MonoBehaviour {
 			parentSpawnObject.transform
 		) as GameObject;
 
-		PickRandomItem ();
 		// Get Item info from database
-		Item item = database.FetchItemByID (PickRandomItem());
-		spawnedObject.GetComponent<RubbishItem> ().RubbishItemID = item.ID; // set RubbishItem class itemId
 
-		RubbishType[] types = new RubbishType[2]; // get rubbish types from item class
-		types [0] = item.Type1;
-		types [1] = item.Type2;
+		Item item = itemDatabase.FetchItemByID (PickRandomItem());
+		spawnedObject.GetComponent<RubbishItem> ().MyRubbishItemID = item.ID; // set RubbishItem class itemId
+
+		RubbishType[] rubbishTypes = new RubbishType[2]; // get rubbish types from item class
+		// Get resource from resouces database by ID, then retrieve its rubbish type
+		rubbishTypes [0] = resourceDatabase.FetchResourceByID((int)item.Resource1).RubbishType;
+		rubbishTypes [1] = resourceDatabase.FetchResourceByID((int)item.Resource2).RubbishType;
+
+		ResourceType[] resourceTypes = new ResourceType[2];
+		resourceTypes [0] = item.Resource1;
+		resourceTypes [0] = item.Resource2;
 
 		spawnedObject.GetComponent<SpriteRenderer> ().sprite = item.Sprite; // set sprite
-		spawnedObject.GetComponent<RubbishItem> ().ThisRubbishTypes = types; // set rubbish types
+		RubbishItem spawnedObjectScript = spawnedObject.GetComponent<RubbishItem> ();
+		spawnedObjectScript.MyRubbishTypes = rubbishTypes; // set rubbish types
+		spawnedObjectScript.MyResourceTypes = resourceTypes; // set resource types
 		PolygonCollider2D spawnedObjectCollider = spawnedObject.AddComponent<PolygonCollider2D> (); // give polygon collider
 
 		// Move the Item if it's on the edge
-//		PolygonCollider2D spawnedObjectCollider = spawnedObject.GetComponent<PolygonCollider2D> ();
 		spawnedObject.transform.position = new Vector3 (Mathf.Clamp (
 			spawnedObject.transform.position.x,
 			(beltPos.x - beltSize.x) + spawnedObjectCollider.bounds.size.x,
@@ -148,19 +145,16 @@ public class RubbishItemSpawner : MonoBehaviour {
 		// Compare random value to rarity thresholds
 		if (randomNum <= rarityThresholds.w) { // Super-Rare
 			Debug.Log("SUPER-RARE " + randomNum);
-			chosenItemID = database.PickRandomItem (ItemRarity.SuperRare);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.SuperRare);
 
 		} else if (randomNum <= rarityThresholds.z) { // Rare
-			Debug.Log("Rare ");
-			chosenItemID = database.PickRandomItem (ItemRarity.Rare);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Rare);
 
 		} else if (randomNum <= rarityThresholds.y) { // Uncommon
-			Debug.Log("Uncommon ");
-			chosenItemID = database.PickRandomItem (ItemRarity.Uncommon);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Uncommon);
 
 		} else { // Common
-			Debug.Log("Common ");
-			chosenItemID = database.PickRandomItem (ItemRarity.Common);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Common);
 		}
 
 		return chosenItemID;

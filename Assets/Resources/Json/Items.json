@@ -4,9 +4,9 @@
 		"title" : "Battery",
 		"slug" : "battery",
 		"description" : "Small source of power.",
-		"rubbishType" : {
-			"type1" : 0,
-			"type2" : 0,
+		"resource" : {
+			"type1" : 1,
+			"type2" : 1,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -19,9 +19,9 @@
 		"title" : "Bush",
 		"slug" : "bush",
 		"description" : "An uprooted bush.",
-		"rubbishType" : {
-			"type1" : 1,
-			"type2" : 1,
+		"resource" : {
+			"type1" : 6,
+			"type2" : 6,
 			"quantity1" : 15,
 			"quantity2" : 15
 		},
@@ -34,9 +34,9 @@
 		"title" : "Cardboard Box",
 		"slug" : "cardboard_box",
 		"description" : "A weary box, once used for storing objects.",
-		"rubbishType" : {
-			"type1" : 2,
-			"type2" : 2,
+		"resource" : {
+			"type1" : 5,
+			"type2" : 5,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -49,9 +49,9 @@
 		"title" : "Generic General",
 		"slug" : "generic_general",
 		"description" : "A generic piece of general rubbish",
-		"rubbishType" : {
-			"type1" : 0,
-			"type2" : 0,
+		"resource" : {
+			"type1" : 3,
+			"type2" : 3,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -64,9 +64,9 @@
 		"title" : "Generic Organic",
 		"slug" : "generic_organic",
 		"description" : "A generic piece of organic rubbish",
-		"rubbishType" : {
-			"type1" : 1,
-			"type2" : 1,
+		"resource" : {
+			"type1" : 6,
+			"type2" : 6,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -79,9 +79,9 @@
 		"title" : "Generic Recycle",
 		"slug" : "generic_recycle",
 		"description" : "A generic piece of recycle rubbish.",
-		"rubbishType" : {
-			"type1" : 2,
-			"type2" : 2,
+		"resource" : {
+			"type1" : 5,
+			"type2" : 7,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -94,9 +94,9 @@
 		"title" : "Glass Bottle",
 		"slug" : "glass_bottle",
 		"description" : "An object for holding liquids.",
-		"rubbishType" : {
-			"type1" : 2,
-			"type2" : 2,
+		"resource" : {
+			"type1" : 5,
+			"type2" : 7,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -109,9 +109,9 @@
 		"title" : "Ham Shank",
 		"slug" : "ham_shank",
 		"description" : "A rotten ham shank.",
-		"rubbishType" : {
-			"type1" : 1,
-			"type2" : 1,
+		"resource" : {
+			"type1" : 6,
+			"type2" : 6,
 			"quantity1" : 15,
 			"quantity2" : 15
 		},
@@ -124,9 +124,9 @@
 		"title" : "Log",
 		"slug" : "log",
 		"description" : "A small part of a tree.",
-		"rubbishType" : {
-			"type1" : 1,
-			"type2" : 1,
+		"resource" : {
+			"type1" : 5,
+			"type2" : 5,
 			"quantity1" : 50,
 			"quantity2" : 50
 		},
@@ -139,9 +139,9 @@
 		"title" : "Newspaper",
 		"slug" : "newspaper",
 		"description" : "November 20XX, Earth Times' issue.",
-		"rubbishType" : {
-			"type1" : 2,
-			"type2" : 2,
+		"resource" : {
+			"type1" : 5,
+			"type2" : 5,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -154,9 +154,9 @@
 		"title" : "Pipe",
 		"slug" : "pipe",
 		"description" : "A sturdy tube for transporting liquids and gas.",
-		"rubbishType" : {
-			"type1" : 0,
-			"type2" : 0,
+		"resource" : {
+			"type1" : 4,
+			"type2" : 4,
 			"quantity1" : 50,
 			"quantity2" : 50
 		},
@@ -169,9 +169,9 @@
 		"title" : "Tin Can",
 		"slug" : "tin_can",
 		"description" : "A tin can.",
-		"rubbishType" : {
-			"type1" : 0,
-			"type2" : 2,
+		"resource" : {
+			"type1" : 4,
+			"type2" : 4,
 			"quantity1" : 20,
 			"quantity2" : 20
 		},

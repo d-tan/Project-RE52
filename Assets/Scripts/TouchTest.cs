@@ -3,7 +3,6 @@ using System.Collections;
 
 public class TouchTest : MonoBehaviour {
 
-
 	bool isHolding = false;
 
 	GameObject heldObject;
@@ -26,6 +25,39 @@ public class TouchTest : MonoBehaviour {
 
 	private float heldCoolDownTimer = 5.0f;
 
+	GameUIManager UIManager;
+	GameObject binParent;
+	ItemCount[] binScripts;
+
+	void Start() {
+		UIManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameUIManager> ();
+
+		// Get A reference to the bin scripts
+		binParent = GameObject.FindGameObjectWithTag ("BinParent");
+		binScripts = new ItemCount[3]; // 3 bins
+		for (int i = 0; i < binParent.transform.childCount; i++) {
+			ItemCount script = binParent.transform.GetChild (i).GetComponent<ItemCount>();
+
+			// Set scripts in order general, organic, recycle
+			switch (script.acceptedType) {
+			case RubbishType.General:
+				binScripts [0] = script;
+				break;
+			case RubbishType.Organic:
+				binScripts [1] = script;
+				break;
+			case RubbishType.Recycle:
+				binScripts [2] = script;
+				break;
+			}
+		}
+
+		// binScripts array must be filled and NOT null
+		for (int i = 0; i < binScripts.Length; i++) {
+			Debug.Assert (binScripts [i]);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 
@@ -42,96 +74,14 @@ public class TouchTest : MonoBehaviour {
 			// Check which touch phase 
 			switch (Input.GetTouch (0).phase) {
 			case TouchPhase.Began:
-//				// Cast a ray from Screen into the world
-//				Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch (0).position);
-//				// Get the object it hits
-//				hits = Physics2D.CircleCastAll ((Vector2)ray.origin, 0.3f, Vector2.zero);
-//
-////				for(int i = 0; i < hits.Length; i++) {
-////					Debug.Log ("Length: " + hits.Length + " item number: " + i + " Object: " + hits[i].collider.name);
-////				}
-//
-//				// Check if the ray hit anything
-//				if (hits.Length > 0) {
-//
-//					int itemIndex = 0;
-//					for (int i = hits.Length - 1; i >= 0; i--) {
-//						if (hits [i].transform.CompareTag ("PickUpable")) {
-//							itemIndex = i;
-//						}
-//					}
-//					// Check if the object is an item
-//					if (hits[itemIndex].transform.CompareTag ("PickUpable")) {
-//						heldObject = hits[itemIndex].transform.gameObject; // set a reference of the object
-////						heldObjectCentre = heldObject.transform.position; // get it's centre
-//
-//						// set the current touch position relative to world co-ordinates
-//						touchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-//						isHolding = true;
-//
-//						timer = 0.0f; // reset timer
-//						flickOrigin = touchPos;
-//
-//						// get references to heldObject's Rigidbody 2D and Item script
-//						HOrb = heldObject.GetComponent<Rigidbody2D> ();
-//						HOScript = heldObject.GetComponent<RubbishItem> ();
-//
-//						// Check if there is a script 
-//						if (HOScript) {
-//							HOScript.IsBeingHeld = true; // tell the object it is being held
-//							heldObject.layer = 9; // "HeldItem" layer // set the layer so it's not interactible with other items
-//						}
-//
-//						// Check if there is a Rigidbody2D
-//						if (HOrb) {
-//							HOrb.velocity = Vector2.zero; // reset velocity
-//						}
-//					}
-//				}
 				StartOfTouch();
 				break;
 
 			case TouchPhase.Moved:
-//				if (isHolding) {
-//					if (heldObject) {
-//						// Move object to new touch position
-//						touchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-//						heldObject.transform.position = new Vector3 (touchPos.x, touchPos.y, heldObject.transform.position.z);
-//
-//					}
-//				}
 				DragTouch();
 				break;
 
 			case TouchPhase.Ended:
-//				isHolding = false; // turn off this holding bool 
-//				// turn off item's holding bool
-//				if (HOScript) {
-//					HOScript.IsBeingHeld = false;
-//				}
-//
-//				if (heldObject) {
-//					// Check if time elapsed is within flick time requirements
-//					if ((timer > minFlickTime) && (timer < maxFlickTime)) {
-//						float timeTaken = timer;
-//
-//						Vector3 finalTouchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-//
-//						if (Vector2.Distance ((Vector2)flickOrigin, (Vector2)finalTouchPos) > minflickDist) {
-////							Rigidbody2D HOrb = heldObject.GetComponent<Rigidbody2D> ();
-//							Vector3 heading = finalTouchPos - flickOrigin;
-//							heading = Vector3.Normalize (heading); // normalise the heading
-//
-//							if (HOrb) {
-//								HOrb.velocity += (Vector2)heading * (flickTimeMultiplier + timeTaken) /
-//								Mathf.Clamp (timeTaken, minFlickMulitplier, maxFlickMultiplier);
-//							} else {
-//								Debug.Log ("This item does not have a Rigidbody2D");
-//							}
-//						} 
-//					}
-//				}
-//				StartCoroutine (IsHeldCoolDown ());
 				EndOfTouch();
 				break;
 
@@ -151,10 +101,6 @@ public class TouchTest : MonoBehaviour {
 		// Get the object it hits
 		hits = Physics2D.CircleCastAll ((Vector2)ray.origin, 0.3f, Vector2.zero);
 
-//		for(int i = 0; i < hits.Length; i++) {
-//			Debug.Log ("Length: " + hits.Length + " item number: " + i + " Object: " + hits[i].collider.name);
-//		}
-
 		// Check if the ray hit anything
 		if (hits.Length > 0) {
 
@@ -167,7 +113,7 @@ public class TouchTest : MonoBehaviour {
 			// Check if the object is an item
 			if (hits[itemIndex].transform.CompareTag ("PickUpable")) {
 				heldObject = hits[itemIndex].transform.gameObject; // set a reference of the object
-				//						heldObjectCentre = heldObject.transform.position; // get it's centre
+//				heldObjectCentre = heldObject.transform.position; // get it's centre
 
 				// set the current touch position relative to world co-ordinates
 				touchPos = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
@@ -179,11 +125,13 @@ public class TouchTest : MonoBehaviour {
 				// get references to heldObject's Rigidbody 2D and Item script
 				HOrb = heldObject.GetComponent<Rigidbody2D> ();
 				HOScript = heldObject.GetComponent<RubbishItem> ();
+				HighlightBin(HOScript); // Highlight the bin --- UI ---
 
 				// Check if there is a script 
 				if (HOScript) {
 					HOScript.IsBeingHeld = true; // tell the object it is being held
 					heldObject.layer = 9; // "HeldItem" layer // set the layer so it's not interactible with other items
+					UIManager.ChangeIndicatorColors(true, HOScript.MyRubbishTypes[0], HOScript.MyRubbishTypes[1]);
 				}
 
 				// Check if there is a Rigidbody2D
@@ -209,7 +157,9 @@ public class TouchTest : MonoBehaviour {
 		isHolding = false; // turn off this holding bool 
 		// turn off item's holding bool
 		if (HOScript) {
+			HighlightBin (HOScript);
 			HOScript.IsBeingHeld = false;
+			UIManager.ChangeIndicatorColors (false);
 		}
 
 		if (heldObject) {
@@ -249,5 +199,21 @@ public class TouchTest : MonoBehaviour {
 
 
 		StopCoroutine (IsHeldCoolDown ());
+	}
+
+	private void HighlightBin(RubbishItem script) {
+		foreach (RubbishType type in script.MyRubbishTypes) {
+			switch (type) {
+			case RubbishType.General:
+				binScripts [(int)RubbishType.General].GlowIndicator (isHolding);
+				break;
+			case RubbishType.Organic:
+				binScripts [(int)RubbishType.Organic].GlowIndicator (isHolding);
+				break;
+			case RubbishType.Recycle:
+				binScripts [(int)RubbishType.Recycle].GlowIndicator (isHolding);
+				break;
+			}
+		}
 	}
 }

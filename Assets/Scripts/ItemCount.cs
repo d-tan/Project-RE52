@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class ItemCount : MonoBehaviour {
 
 	public Text itemCountText;
+	public Image glowImage;
 
 //	private int itemCount = 0;
 	private float flashTime = 0.2f;
@@ -16,15 +17,11 @@ public class ItemCount : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		myRenderer = GetComponent<Renderer> ();
+		originalColour = GetComponent<SpriteRenderer> ().color;
 
-		if (myRenderer) {
-			originalColour = myRenderer.material.color;
-		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+//		glowImage.color = new Color (originalColour.r, originalColour.g, originalColour.b, 150.0f/255.0f);
+		glowImage.color = new Color (1, 1, 1, 150.0f/255.0f);
+		glowImage.gameObject.SetActive (false);
 	}
 
 	void OnTriggerEnter2D (Collider2D other) {
@@ -44,7 +41,7 @@ public class ItemCount : MonoBehaviour {
 		if (otherScript) {
 			if (!otherScript.IsBeingHeld) {
 				// Check if the types match
-				if (otherScript.ThisRubbishTypes[0] == acceptedType) {
+				if (otherScript.MyRubbishTypes[0] == acceptedType || otherScript.MyRubbishTypes[1] == acceptedType) {
 					ScoreManager.singleton.AddMinusScore (acceptedType, 1);
 					StartCoroutine (CorrectFlash ());
 				} else {
@@ -66,6 +63,10 @@ public class ItemCount : MonoBehaviour {
 		}
 	}
 
+	public void GlowIndicator(bool state) {
+		glowImage.gameObject.SetActive (state);
+	}
+
 	IEnumerator IncorrectFlash() {
 		myRenderer.material.color = Color.black;
 
@@ -85,4 +86,6 @@ public class ItemCount : MonoBehaviour {
 
 		StopCoroutine (CorrectFlash ());
 	}
+
+
 }

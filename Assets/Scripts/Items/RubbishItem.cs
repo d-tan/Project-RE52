@@ -17,6 +17,7 @@ public class RubbishItem : MonoBehaviour {
 	bool endOfConveyorbelt = false;
 	bool isHeld = false;
 	private int itemID;
+	private ResourceType[] resourceTypes = new ResourceType[2];
 
 	void Start() {
 //		itemCollider = GetComponent<Collider2D> ();
@@ -28,7 +29,7 @@ public class RubbishItem : MonoBehaviour {
 		this.gameObject.layer = 8; // "Item" layer
 	}
 
-	public RubbishType[] ThisRubbishTypes {
+	public RubbishType[] MyRubbishTypes {
 		get { 
 			return myTypes;
 		}
@@ -37,12 +38,21 @@ public class RubbishItem : MonoBehaviour {
 		}
 	}
 
-	public int RubbishItemID {
+	public int MyRubbishItemID {
 		get {
 			return itemID;
 		}
 		set {
 			itemID = value;
+		}
+	}
+
+	public ResourceType[] MyResourceTypes {
+		get {
+			return resourceTypes;
+		}
+		set {
+			resourceTypes = value;
 		}
 	}
 

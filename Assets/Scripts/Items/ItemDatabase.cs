@@ -3,6 +3,7 @@ using System.Collections;
 using LitJson;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.UI;
 
 public enum ItemRarity {
 	Common,
@@ -22,10 +23,14 @@ public class ItemDatabase : MonoBehaviour {
 	private List<int> superItemsID = new List<int>(); //  super-rares are 3
 
 	void Start() {
+//		itemData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssests/Items.json"));
+//		itemData = JsonMapper.ToObject (File.ReadAllText("jar:file://" + Application.dataPath + "!/assets/" + "/Items.json"));
 
-		itemData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssests/Items.json"));
+		TextAsset file = Resources.Load("Json/Items") as TextAsset;
+		itemData = JsonMapper.ToObject (file.text);
+
+
 		ConstructItemDatabase ();
-
 		ConstructItemRarityList ();
 	}
 		
@@ -36,13 +41,12 @@ public class ItemDatabase : MonoBehaviour {
 				itemData [i] ["title"].ToString(), 
 				itemData[i] ["slug"].ToString(),
 				itemData[i] ["description"].ToString(),
-				(RubbishType)(int)itemData[i]["rubbishType"] ["type1"],
-				(RubbishType)(int)itemData[i]["rubbishType"] ["type2"],
-				(int)itemData[i]["rubbishType"]["quantity1"],
-				(int)itemData[i]["rubbishType"]["quantity2"],
+				(ResourceType)(int)itemData[i]["resource"] ["type1"],
+				(ResourceType)(int)itemData[i]["resource"] ["type2"],
+				(int)itemData[i]["resource"]["quantity1"],
+				(int)itemData[i]["resource"]["quantity2"],
 				(bool)itemData[i]["craftingItem"],
 				(ItemRarity)(int)itemData[i]["rarity"]
-
 			));
 		}
 	}

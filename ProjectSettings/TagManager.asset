@@ -6,7 +6,8 @@ TagManager:
   tags:
   - PickUpable
   - ConveyorBelt
-  - ItemDatabase
+  - Databases
+  - BinParent
   layers:
   - Default
   - TransparentFX
