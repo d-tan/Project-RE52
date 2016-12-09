@@ -11,6 +11,7 @@ public class GameUIManager : MonoBehaviour {
 	public Text resourceDisplay;
 
 	public GameObject upgradesPanel;
+	private float upgradeFlashTime = 0.5f;
 	List<Text> upgradesTexts = new List<Text>();
 	List<Button> upgradeButtons = new List<Button> ();
 
@@ -110,5 +111,21 @@ public class GameUIManager : MonoBehaviour {
 
 	public List<Button> GetUpgradeButtons() {
 		return upgradeButtons;
+	}
+
+	public void DisableUpgradeButton(UpgradeNames upgradeName) {
+		upgradesTexts [(int)upgradeName].color = Color.green;
+		upgradeButtons [(int)upgradeName].enabled = false;
+	}
+
+	public IEnumerator UpgradeUnavaliableFlash(UpgradeNames upgradeName) {
+		Text upgradeText = upgradesTexts [(int)upgradeName];
+		Color originalColor = upgradeText.color;
+
+		for (int i = 0; i < 3; i++) {
+			upgradeText.color = Color.red;
+			yield return new WaitForSeconds (upgradeFlashTime);
+			upgradeText.color = originalColor;
+		}
 	}
 }

@@ -14,6 +14,9 @@ public class ItemCount : MonoBehaviour {
 
 	public RubbishType acceptedType;
 
+	ItemDatabase itemDatabase;
+	InventoryDatabase inventoryDatabase;
+
 	ResourceManager resourceManager;
 	ScoreManager scoreManager;
 
@@ -21,8 +24,14 @@ public class ItemCount : MonoBehaviour {
 	void Start () {
 		myRenderer = GetComponent<Renderer> ();
 		originalColour = GetComponent<SpriteRenderer> ().color;
-		scoreManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ScoreManager> ();
-		resourceManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ResourceManager> ();
+
+		GameObject databases = GameObject.FindGameObjectWithTag ("Databases");
+		itemDatabase = databases.GetComponent<ItemDatabase> ();
+		inventoryDatabase = databases.GetComponent<InventoryDatabase> ();
+
+		GameObject managers = GameObject.FindGameObjectWithTag ("GameController");
+		scoreManager = managers.GetComponent<ScoreManager> ();
+		resourceManager = managers.GetComponent<ResourceManager> ();
 
 //		glowImage.color = new Color (originalColour.r, originalColour.g, originalColour.b, 150.0f/255.0f);
 		glowImage.color = new Color (1, 1, 1, 150.0f/255.0f);
@@ -48,6 +57,12 @@ public class ItemCount : MonoBehaviour {
 				// Check if the types match
 				if (otherScript.MyRubbishTypes[0] == acceptedType || otherScript.MyRubbishTypes[1] == acceptedType) {
 					scoreManager.AddMinusScore (acceptedType, 1);
+
+					if (itemDatabase.FetchItemByID (otherScript.MyRubbishItemID).CraftingItem) {
+						inventoryDatabase.AddItemByID (otherScript.MyRubbishItemID);
+//						Debug.Log ("Added Item to Inventory");
+//						Debug.Log(inventoryDatabase.Inventory [itemDatabase.FetchItemByID (otherScript.MyRubbishItemID)]);
+					}
 
 					resourceManager.AddResourceValue (otherScript.MyRubbishItemID, acceptedType, scoreManager.CurrentMultiplier);
 					StartCoroutine (CorrectFlash ());

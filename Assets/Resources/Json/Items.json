@@ -11,7 +11,7 @@
 			"quantity2" : 10
 		},
 		"craftingItem" : false,
-		"rarity" : 2
+		"rarity" : 0
 	},
 
 	{
@@ -26,7 +26,7 @@
 			"quantity2" : 15
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 3
 	},
 
 	{
@@ -95,8 +95,8 @@
 		"slug" : "glass_bottle",
 		"description" : "An object for holding liquids.",
 		"resource" : {
-			"type1" : 5,
-			"type2" : 7,
+			"type1" : 7,
+			"type2" : 5,
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
@@ -116,7 +116,7 @@
 			"quantity2" : 15
 		},
 		"craftingItem" : false,
-		"rarity" : 0
+		"rarity" : 2
 	},
 
 	{
@@ -131,7 +131,7 @@
 			"quantity2" : 50
 		},
 		"craftingItem" : false,
-		"rarity" : 1
+		"rarity" : 2
 	},
 
 	{
@@ -145,8 +145,8 @@
 			"quantity1" : 10,
 			"quantity2" : 10
 		},
-		"craftingItem" : false,
-		"rarity" : 3
+		"craftingItem" : true,
+		"rarity" : 1
 	},
 
 	{
@@ -161,7 +161,7 @@
 			"quantity2" : 50
 		},
 		"craftingItem" : false,
-		"rarity" : 1
+		"rarity" : 0
 	},
 
 	{

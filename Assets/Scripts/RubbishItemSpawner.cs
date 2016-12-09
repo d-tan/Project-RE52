@@ -240,4 +240,13 @@ public class RubbishItemSpawner : MonoBehaviour {
 		beltSpeed = initialBeltSpeed;
 		spawnTimeBuffer = initialSpawnTimeBuffer;
 	}
+
+	public Vector4 RarityThresholds {
+		get {
+			return rarityThresholds;
+		}
+		set {
+			rarityThresholds = value;
+		}
+	}
 }
