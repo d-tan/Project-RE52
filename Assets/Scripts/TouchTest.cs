@@ -109,6 +109,8 @@ public class TouchTest : MonoBehaviour {
 				if (hits [i].transform.CompareTag ("PickUpable")) {
 					itemIndex = i;
 				}
+
+				ShowBinStats (hits[i].transform.gameObject);
 			}
 			// Check if the object is an item
 			if (hits[itemIndex].transform.CompareTag ("PickUpable")) {
@@ -214,6 +216,16 @@ public class TouchTest : MonoBehaviour {
 				binScripts [(int)RubbishType.Recycle].GlowIndicator (isHolding);
 				break;
 			}
+		}
+	}
+
+
+	// Checks if touched object is a bin, then call script's display text method
+	private void ShowBinStats(GameObject hitTarget) {
+		ItemCount targetScript = hitTarget.GetComponent<ItemCount> ();
+
+		if (targetScript) {
+			targetScript.DisplayText ();
 		}
 	}
 }

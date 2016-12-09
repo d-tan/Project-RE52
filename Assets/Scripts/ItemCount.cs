@@ -14,16 +14,21 @@ public class ItemCount : MonoBehaviour {
 
 	public RubbishType acceptedType;
 
+	ResourceManager resourceManager;
+	ScoreManager scoreManager;
+
 	// Use this for initialization
 	void Start () {
 		myRenderer = GetComponent<Renderer> ();
 		originalColour = GetComponent<SpriteRenderer> ().color;
+		scoreManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ScoreManager> ();
+		resourceManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ResourceManager> ();
 
 //		glowImage.color = new Color (originalColour.r, originalColour.g, originalColour.b, 150.0f/255.0f);
 		glowImage.color = new Color (1, 1, 1, 150.0f/255.0f);
 		glowImage.gameObject.SetActive (false);
 	}
-
+		
 	void OnTriggerEnter2D (Collider2D other) {
 		TriggerCount (other);
 	}
@@ -42,16 +47,21 @@ public class ItemCount : MonoBehaviour {
 			if (!otherScript.IsBeingHeld) {
 				// Check if the types match
 				if (otherScript.MyRubbishTypes[0] == acceptedType || otherScript.MyRubbishTypes[1] == acceptedType) {
-					ScoreManager.singleton.AddMinusScore (acceptedType, 1);
+					scoreManager.AddMinusScore (acceptedType, 1);
+
+					resourceManager.AddResourceValue (otherScript.MyRubbishItemID, acceptedType, scoreManager.CurrentMultiplier);
 					StartCoroutine (CorrectFlash ());
 				} else {
-					ScoreManager.singleton.AddMinusScore (acceptedType, -1);
+					scoreManager.AddMinusScore (acceptedType, -1);
 					StartCoroutine (IncorrectFlash ());
 				}
+				DisplayText (true);
+
 				Destroy (other.gameObject);
 //				SetCountText (itemCount);
 			}
 		}
+			
 	}
 
 	// Set the UI Text
@@ -87,5 +97,8 @@ public class ItemCount : MonoBehaviour {
 		StopCoroutine (CorrectFlash ());
 	}
 
-
+	public void DisplayText(bool checkIfAvaliable = false){
+		// Detects mouse button anywhere, so it activates all of them. All bins are called and hence all resources are displayed with the last one on top
+		resourceManager.DisplayResources (acceptedType, checkIfAvaliable);
+	}
 }

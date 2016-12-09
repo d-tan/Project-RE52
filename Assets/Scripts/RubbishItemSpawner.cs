@@ -5,7 +5,7 @@ using UnityEngine.UI;
 // MUST be attached to conveyor belt object.
 public class RubbishItemSpawner : MonoBehaviour {
 
-	public static RubbishItemSpawner singleton;
+//	public static RubbishItemSpawner singleton;
 
 	public GameObject parentSpawnObject;
 	public GameObject shellItem;
@@ -31,13 +31,8 @@ public class RubbishItemSpawner : MonoBehaviour {
 
 	ItemDatabase itemDatabase;
 	ResourceDatabase resourceDatabase;
-	GameUIManager UIManager;
-
-	void Awake() {
-		if (singleton == null) {
-			singleton = this;
-		}
-	}
+	ScoreManager scoreManager;
+//	GameUIManager UIManager;
 
 	// Use this for initialization
 	void Start () {
@@ -51,9 +46,13 @@ public class RubbishItemSpawner : MonoBehaviour {
 		initialBeltSpeed = beltSpeed; // hold the initial values
 		initialSpawnTimeBuffer = spawnTimeBuffer;
 
-		itemDatabase = GameObject.FindGameObjectWithTag ("Databases").GetComponent<ItemDatabase> ();
-		resourceDatabase = GameObject.FindGameObjectWithTag ("Databases").GetComponent<ResourceDatabase> ();
-		UIManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameUIManager> ();
+		GameObject databases = GameObject.FindGameObjectWithTag ("Databases");
+		GameObject managers = GameObject.FindGameObjectWithTag ("GameController");
+
+		itemDatabase = databases.GetComponent<ItemDatabase> ();
+		resourceDatabase = databases.GetComponent<ResourceDatabase> ();
+//		UIManager = managers.GetComponent<GameUIManager> ();
+		scoreManager = managers.GetComponent<ScoreManager> ();
 	}
 	
 	// Update is called once per frame
@@ -189,7 +188,11 @@ public class RubbishItemSpawner : MonoBehaviour {
 
 			if ((bool)rb && (bool)otherScipt) {
 				if (other.gameObject.layer != 9) { // 9 = "HeldItem" layer
-					rb.velocity = new Vector2 (0.0f, velocityY);
+					if (rb.velocity.y < velocityY) {
+						rb.velocity = new Vector2 (0.0f, velocityY);
+					} else {
+						rb.velocity = Vector2.zero;
+					}
 				}
 			} else {
 				Debug.Log ("This item, " + other.ToString() + ", does not have a rigidbody");
@@ -215,12 +218,12 @@ public class RubbishItemSpawner : MonoBehaviour {
 
 	public void ChangeSpawnTime() {
 		if (spawnTimeBuffer > spawnTimeBufferMin) {
-			if (ScoreManager.singleton.multiplier < 4) {
+			if (scoreManager.multiplier < 4) {
 				spawnTimeBuffer = Mathf.Clamp (
-					Mathf.Exp(-ScoreManager.singleton.multiplier), spawnTimeBufferMin, initialSpawnTimeBuffer);
+					Mathf.Exp(-scoreManager.multiplier), spawnTimeBufferMin, initialSpawnTimeBuffer);
 			} else {
 				spawnTimeBuffer = Mathf.Clamp(
-					initialSpawnTimeBuffer - Mathf.Exp (0.1f * ScoreManager.singleton.multiplier - 1.1f),
+					initialSpawnTimeBuffer - Mathf.Exp (0.1f * scoreManager.multiplier - 1.1f),
 					spawnTimeBufferMin, initialSpawnTimeBuffer);
 			}
 		}
@@ -229,7 +232,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 	public void SetNewBeltSpeed() {
 		if (beltSpeed < beltSpeedMax) {
 			beltSpeed = Mathf.Clamp(
-				Mathf.Exp(0.25f * ScoreManager.singleton.multiplier + 0.5f), initialBeltSpeed, beltSpeedMax);
+				Mathf.Exp(0.25f * scoreManager.multiplier + 0.5f), initialBeltSpeed, beltSpeedMax);
 		}
 	}
 

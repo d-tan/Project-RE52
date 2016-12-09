@@ -1,0 +1,120 @@
+[
+	{
+		"id" : 0,
+		"title" : "Improved Analysis",
+		"slug" : "improved_analysis",
+		"description" : "Improves analysis methods for identifying useful objects.",
+		"section" : 0,
+		"requirements" : {
+			"items" : {
+				"IDs" : {
+					"ID1" : 9
+				},
+
+				"quantities" : {
+					"Q1" : 1
+				}
+			},
+
+			"resources" : {
+				"IDs" : {
+					"ID1" : 1,
+					"ID2" : 4,
+					"ID3" : 7
+				},
+				"quantities" : {
+					"Q1" : 350,
+					"Q2" : 175,
+					"Q3" : 50
+				}
+			}
+		}
+	},
+
+	{
+		"id" : 1,
+		"title" : "Wider Grip",
+		"slug" : "wider_grip",
+		"description" : "A wider grips allows for more objects to be handled at once.",
+		"section" : 2,
+		"requirements" : {
+			"items" : {
+				"IDs" : {
+				},
+				"quantities" : {
+				}
+			},
+
+			"resources" : {
+				"IDs" : {
+					"ID1" : 1,
+					"ID2" : 4,
+					"ID3" : 7
+				},
+				"quantities" : {
+					"Q1" : 200,
+					"Q2" : 115,
+					"Q3" : 10
+				}
+			}
+		}
+	},
+
+	{
+		"id" : 2,
+		"title" : "Efficiency",
+		"slug" : "efficiency",
+		"description" : "Improved efficiency of sorting objects, allowing for better multiplier scores.",
+		"section" : 2,
+		"requirements" : {
+			"items" : {
+				"IDs" : {
+				},
+				"quantities" : {
+				}
+			},
+
+			"resources" : {
+				"IDs" : {
+					"ID1" : 1,
+					"ID2" : 4,
+					"ID3" : 7
+				},
+				"quantities" : {
+					"Q1" : 200,
+					"Q2" : 115,
+					"Q3" : 10
+				}
+			}
+		}
+	},
+
+	{
+		"id" : 3,
+		"title" : "Max Throughput",
+		"slug" : "max_throughput",
+		"description" : "Increases the Rubbish Collector 5000's power to improve throughput.",
+		"section" : 4,
+		"requirements" : {
+			"items" : {
+				"IDs" : {
+				},
+				"quantities" : {
+				}
+			},
+
+			"resources" : {
+				"IDs" : {
+					"ID1" : 1,
+					"ID2" : 4,
+					"ID3" : 7
+				},
+				"quantities" : {
+					"Q1" : 350,
+					"Q2" : 400,
+					"Q3" : 100
+				}
+			}
+		}
+	}
+]

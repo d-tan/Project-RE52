@@ -110,8 +110,8 @@
 		"slug" : "ham_shank",
 		"description" : "A rotten ham shank.",
 		"resource" : {
-			"type1" : 6,
-			"type2" : 6,
+			"type1" : 2,
+			"type2" : 2,
 			"quantity1" : 15,
 			"quantity2" : 15
 		},

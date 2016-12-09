@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour {
 
-	public static ScoreManager singleton;
+	RubbishItemSpawner itemSpawner;
 
 	public Text genRubScoreText;
 	public Text orgRubScoreText;
@@ -34,16 +34,11 @@ public class ScoreManager : MonoBehaviour {
 	private float initialTimerStart = 0.65f; // percentage the slider timer starts at
 	private float minItemTimeValue = 0.15f;
 
-	// Use this for initialization
-	void Awake () {
-		if (singleton == null) {
-			singleton = this;
-		}
-	}
-
 	void Start() {
 		// Disable multiplier UI
 		ToggleMultiplierUI(false);
+
+		itemSpawner = GameObject.FindGameObjectWithTag ("ConveyorBelt").GetComponent<RubbishItemSpawner> ();
 	}
 	
 	// Update is called once per frame
@@ -146,8 +141,8 @@ public class ScoreManager : MonoBehaviour {
 
 		SetItemTimeValue ();
 
-		RubbishItemSpawner.singleton.SetNewBeltSpeed ();
-		RubbishItemSpawner.singleton.ChangeSpawnTime ();
+		itemSpawner.SetNewBeltSpeed ();
+		itemSpawner.ChangeSpawnTime ();
 	}
 
 //	private void SetItemsToNextMultiplier () {
@@ -195,7 +190,13 @@ public class ScoreManager : MonoBehaviour {
 		multiplierTimer = 5.0f;
 		StartCoroutine (MultiplierUITurnOff (multiplierStopColor));
 		isMuliplying = false;
-		RubbishItemSpawner.singleton.ResetSpawnNSpeed ();
+		itemSpawner.ResetSpawnNSpeed ();
+	}
+
+	public int CurrentMultiplier {
+		get {
+			return multiplier;
+		}
 	}
 
 	// Timer to turn off Multiplier UI. So the UI is not disabled instantly

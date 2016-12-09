@@ -19,6 +19,7 @@ public class ResourceDatabase : MonoBehaviour {
 	}
 
 	private void ConstructResourceDatabase() {
+		string debugString = "ID: (int) name in DB | enum name \n";
 		for (int i = 0; i < resourceData.Count; i++) {
 			database.Add( new Resource(
 				(int)resourceData[i]["id"],
@@ -27,8 +28,9 @@ public class ResourceDatabase : MonoBehaviour {
 				resourceData[i]["description"].ToString(),
 				(RubbishType)(int)resourceData[i]["rubbishType"]
 			));
-			Debug.Log (database [i].ID + " " + database [i].Title + " | " + (ResourceType)database [i].ID);
+			debugString += database [i].ID + " " + database [i].Title + " | " + (ResourceType)database [i].ID + "\n";
 		}
+		Debug.Log (debugString);
 	}
 
 	public Resource FetchResourceByID(int id) {
@@ -38,5 +40,11 @@ public class ResourceDatabase : MonoBehaviour {
 			}
 		}
 		return database [0];
+	}
+
+	public int DatabaseLength {
+		get {
+			return database.Count;
+		}
 	}
 }

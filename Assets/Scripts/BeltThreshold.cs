@@ -9,24 +9,21 @@ public class BeltThreshold : MonoBehaviour {
 
 	Collider2D basisCollider = null;
 
+	RubbishItemSpawner itemSpawner;
+
 	// Use this for initialization
 	void Start () {
-
+		itemSpawner = GameObject.FindGameObjectWithTag ("ConveyorBelt").GetComponent<RubbishItemSpawner> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (thresholdReached) {
-			RubbishItemSpawner.singleton.ThresholdReached = true;
+			itemSpawner.ThresholdReached = true;
 
 		} else {
-			RubbishItemSpawner.singleton.ThresholdReached = false;
-		}
-	}
-
-	void OnTriggerEnter2D (Collider2D other) {
-		if (DetectItemScript (other)) {
-//			timer = 0.0f;
+//			Debug.Log (RubbishItemSpawner.singleton);
+			itemSpawner.ThresholdReached = false;
 		}
 	}
 

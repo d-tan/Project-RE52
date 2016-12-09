@@ -58,7 +58,7 @@ public class ItemDatabase : MonoBehaviour {
 			}
 		}
 
-		return new Item ();;
+		return new Item ();
 	}
 
 	// Constructs lists of item IDs by the rarity
@@ -68,21 +68,25 @@ public class ItemDatabase : MonoBehaviour {
 			case ItemRarity.Common:
 				// common
 				commonItemsID.Add (database [i].ID);
+//				Debug.Log ("name: " + database [i].Title + " added to common.");
 				break;
 
 			case ItemRarity.Uncommon:
 				// uncommon
 				uncommonItemsID.Add (database [i].ID);
+//				Debug.Log ("name: " + database [i].Title + " added to uncommon.");
 				break;
 
 			case ItemRarity.Rare:
 				// rare
 				rareItemsID.Add (database [i].ID);
+//				Debug.Log ("name: " + database [i].Title + " added to rare.");
 				break;
 
 			case ItemRarity.SuperRare:
 				// super-rare
 				superItemsID.Add (database [i].ID);
+//				Debug.Log ("name: " + database [i].Title + " added to super rare.");
 				break;
 
 			default:
@@ -103,16 +107,17 @@ public class ItemDatabase : MonoBehaviour {
 		
 		switch (rarity) {
 		case ItemRarity.Common:
-			chosenItemID = Mathf.FloorToInt (Random.Range (0, commonItemsID.Count));
+			chosenItemID = commonItemsID[Mathf.FloorToInt (Random.Range (0, commonItemsID.Count))];
 			break;
 		case ItemRarity.Uncommon:
-			chosenItemID = Mathf.FloorToInt (Random.Range (0, uncommonItemsID.Count));
+			chosenItemID = uncommonItemsID[Mathf.FloorToInt (Random.Range (0, uncommonItemsID.Count))];
 			break;
 		case ItemRarity.Rare:
-			chosenItemID = Mathf.FloorToInt (Random.Range (0, rareItemsID.Count));
+			chosenItemID = rareItemsID[Mathf.FloorToInt (Random.Range (0, rareItemsID.Count))];
 			break;
 		case ItemRarity.SuperRare:
-			chosenItemID = Mathf.FloorToInt (Random.Range (0, superItemsID.Count));
+			chosenItemID = superItemsID[Mathf.FloorToInt (Random.Range (0, superItemsID.Count))];
+			Debug.Log ("Super rare item ID: " + chosenItemID + " name: " + database[chosenItemID].Title);
 			break;
 		default:
 			Debug.Log ("Unknown item rarity given");
