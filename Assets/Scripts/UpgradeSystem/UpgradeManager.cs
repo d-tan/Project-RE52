@@ -12,10 +12,10 @@ public enum UpgradeSection {
 }
 
 public enum UpgradeNames {
-	Improved_Analysis,
-	Wider_Grip,
-	Efficiency,
-	Max_Throughput
+	Improved_Analysis, // Increases rarity finds; players can find rarer items
+	Wider_Grip, // Increases the number of items picked up in one go; players can pick up near by items that are the same as the item tapped on
+	Efficiency, // Increases time taken for multipliers to count down or time value per item; easier for players to reach higher streaks
+	Max_Throughput // Increases number of items spawned by reducing spawn time
 }
 
 public class UpgradeManager : MonoBehaviour {
