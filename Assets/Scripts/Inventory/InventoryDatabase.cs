@@ -61,4 +61,29 @@ public class InventoryDatabase : MonoBehaviour {
 		KeyValuePair<Item, int> newKeyValuePair = new KeyValuePair<Item, int> (new Item (), 0);
 		return newKeyValuePair;
 	}
+
+
+	// --------------- For UI elements ---------------
+	public List<string> GenerateInventoryStrings() {
+		List<string> inventoryItems = new List<string> ();
+		List<Item> keys = new List<Item>(inventory.Keys);
+
+		foreach (Item key in inventory.Keys) {
+			string itemString = "<b>" + key.Title + "</b>\tQuantity: " + inventory [key] + "\n" +
+				key.Description + "\n";
+			inventoryItems.Add(itemString);
+		}
+
+		return inventoryItems;
+	}
+
+	public List<Sprite> GenerateInventorySprites() {
+		List<Sprite> inventorySprites = new List<Sprite>();
+
+		foreach (Item key in inventory.Keys) {
+			inventorySprites.Add (key.Sprite);
+		}
+
+		return inventorySprites;
+	}
 }

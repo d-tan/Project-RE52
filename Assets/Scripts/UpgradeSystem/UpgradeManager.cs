@@ -52,30 +52,52 @@ public class UpgradeManager : MonoBehaviour {
 	}
 
 	void ImprovedAnalysisUpgrade() {
+		if (CheckUpgradeIsAvaliable (UpgradeNames.Improved_Analysis)) {
+			rubbishSpawner.RarityThresholds = upgradedRarityThresholds;
+		}
+	}
+
+	void WiderGripUpgrade() {
+		if (CheckUpgradeIsAvaliable (UpgradeNames.Wider_Grip)) {
+			Debug.Log ("Wider Grip Upgrade");
+		}
+	}
+
+	void Efficiency() {
+		if (CheckUpgradeIsAvaliable (UpgradeNames.Efficiency)) {
+			Debug.Log ("Efficiency Upgrade");
+		}
+	}
+
+	void MaxThroughput() {
+		if (CheckUpgradeIsAvaliable (UpgradeNames.Max_Throughput)) {
+			Debug.Log ("Max Throughput Upgrade");
+		}
+	}
+
+	private bool CheckUpgradeIsAvaliable(UpgradeNames upgradeName) {
 		bool itemsAvaliable = true;
 		bool resourcesAvaliable = true;
-		Debug.Log ("Improved Analysis upgrade");
+		Upgrade upgradeToCheck = upgradesDatabase.FetchUpgradeByID ((int)upgradeName);
 
 		// Check Inventory if item requirements are met
-		Dictionary<int, int> itemsRequired = upgradesDatabase.FetchUpgradeByID(0).Items;
+		Dictionary<int, int> itemsRequired = upgradeToCheck.Items;
 		itemsAvaliable = CheckInventoryOrResources (itemsRequired, true);
 
 		// check resources if resources requirements are met
-		Dictionary<int, int> resourcesRequired = upgradesDatabase.FetchUpgradeByID (0).Resources;
+		Dictionary<int, int> resourcesRequired = upgradeToCheck.Resources;
 		resourcesAvaliable = CheckInventoryOrResources (resourcesRequired, false);
 
 		// Take from inventory + resources
 		if (itemsAvaliable && resourcesAvaliable) {
-			UIManager.DisableUpgradeButton (UpgradeNames.Improved_Analysis);
+			UIManager.DisableUpgradeButton (upgradeName);
 			TakeItemsOrResources (itemsRequired, true);
 			TakeItemsOrResources (resourcesRequired, false);
 
-			rubbishSpawner.RarityThresholds = upgradedRarityThresholds;
-			Debug.Log ("Imrpoved Analysis upgrade Successful");
-
+			return true;
 		} else {
-			StopCoroutine (UIManager.UpgradeUnavaliableFlash (UpgradeNames.Improved_Analysis));
-			StartCoroutine (UIManager.UpgradeUnavaliableFlash (UpgradeNames.Improved_Analysis));
+			StopCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
+			StartCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
 			string message = "Unable to upgrade: \n";
 			string itemsMessage = "Insufficient items avaliable.\n";
 			string resourcesMessage = "Insufficient resources avaliable.\n";
@@ -89,20 +111,9 @@ public class UpgradeManager : MonoBehaviour {
 			}
 
 			Debug.Log (message);
+
+			return false;
 		}
-		// implement upgrade
-	}
-
-	void WiderGripUpgrade() {
-		Debug.Log ("Wider Grip Upgrade");
-	}
-
-	void Efficiency() {
-		Debug.Log ("Efficiency Upgrade");
-	}
-
-	void MaxThroughput() {
-		Debug.Log ("Max Throughput Upgrade");
 	}
 
 	private bool CheckInventoryOrResources(Dictionary<int, int> listToCheck, bool checkItems) {

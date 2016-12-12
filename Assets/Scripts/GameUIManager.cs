@@ -10,13 +10,21 @@ public class GameUIManager : MonoBehaviour {
 
 	public Text resourceDisplay;
 
+	// Upgrades
 	public GameObject upgradesPanel;
 	private float upgradeFlashTime = 0.5f;
 	List<Text> upgradesTexts = new List<Text>();
 	List<Button> upgradeButtons = new List<Button> ();
 
-
 	private bool upgradesDisplaying = true;
+
+	// Inventory
+	public GameObject inventoryGroup;
+	public GameObject inventoryPanel;
+	public GameObject inventorySlot;
+	InventoryDatabase inventoryDatabase;
+
+	private bool inventoryDisplaying = true;
 
 	void Start() {
 		indicatorColors [0] = new Color (1.0f, 103.0f / 255.0f, 103.0f / 255.0f, 160.0f / 255.0f);
@@ -24,9 +32,16 @@ public class GameUIManager : MonoBehaviour {
 		indicatorColors [2] = new Color (241.0f / 255.0f, 244.0f / 255.0f, 48.0f / 255.0f, 160.0f / 255.0f);
 		indicatorColors [3] = new Color (184.0f / 255.0f, 184.0f / 255.0f, 184.0f / 255.0f, 160.0f / 255.0f);
 
+		// Resources
 		resourceDisplay.gameObject.SetActive (false);
+
+		// Upgrades
 		RetrieveUpgradesUI ();
-//		ToggleUpgradesDisplay ();
+		ToggleUpgradesDisplay ();
+
+		// Inventory
+		ToggleInventoryDisplay();
+		inventoryDatabase = GameObject.FindGameObjectWithTag("Databases").GetComponent<InventoryDatabase>();
 	}
 
 
@@ -126,6 +141,42 @@ public class GameUIManager : MonoBehaviour {
 			upgradeText.color = Color.red;
 			yield return new WaitForSeconds (upgradeFlashTime);
 			upgradeText.color = originalColor;
+		}
+	}
+
+
+	// --------- INVENTORY UI ---------
+	public void ToggleInventoryDisplay() {
+		inventoryDisplaying = !inventoryDisplaying;
+		inventoryGroup.SetActive (inventoryDisplaying);
+		if (inventoryDisplaying) {
+			DisplayInventory ();
+		}
+	}
+
+	private void DisplayInventory() {
+		ClearInventoryDisplay ();
+		List<string> inventoryItems = inventoryDatabase.GenerateInventoryStrings ();
+		List<Sprite> inventorySprites = inventoryDatabase.GenerateInventorySprites ();
+		Image slotImage;
+		Text descriptionText;
+
+		for (int i = 0; i < inventoryItems.Count; i++) {
+			GameObject newSlot = Instantiate (inventorySlot) as GameObject;
+			newSlot.transform.SetParent(inventoryPanel.transform, false);
+
+			slotImage = newSlot.GetComponent<Image> ();
+			descriptionText = newSlot.GetComponentInChildren<Text> ();
+
+			slotImage.sprite = inventorySprites [i];
+			descriptionText.text = inventoryItems [i];
+		}
+
+	}
+
+	private void ClearInventoryDisplay() {
+		for (int i = 0; i < inventoryPanel.transform.childCount; i++) {
+			Destroy (inventoryPanel.transform.GetChild (0).gameObject);
 		}
 	}
 }
