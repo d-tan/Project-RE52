@@ -3,13 +3,18 @@ using System.Collections;
 using LitJson;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine.UI;
 
 public enum ItemRarity {
-	Common,
-	Uncommon,
-	Rare,
-	SuperRare
+	Not_Spawnable = -1,
+	Common_ = 0,
+	Uncommon_,
+	Rare_,
+	Super_Rare
+}
+
+public enum ItemIDBoundaries {
+	Items_ = 0,
+	Task_Items = 200
 }
 
 public class ItemDatabase : MonoBehaviour {
@@ -29,6 +34,8 @@ public class ItemDatabase : MonoBehaviour {
 		TextAsset file = Resources.Load("Json/Items") as TextAsset;
 		itemData = JsonMapper.ToObject (file.text);
 
+//		database.Add (new CraftingItem (10, "New Crafting Item", "new_crafting_item", "A new Crafting Item", ResourceType.Building_Materials, ResourceType.Building_Materials, 10, 10, true, 0, "Special Propert"));
+//		Debug.Log (((CraftingItem)database [0]).Title);
 
 		ConstructItemDatabase ();
 		ConstructItemRarityList ();
@@ -36,19 +43,106 @@ public class ItemDatabase : MonoBehaviour {
 		
 	private void ConstructItemDatabase() {
 		for (int i = 0; i < itemData.Count; i++) {
-			database.Add (new Item (
-				(int)itemData [i] ["id"], 
-				itemData [i] ["title"].ToString(), 
-				itemData[i] ["slug"].ToString(),
-				itemData[i] ["description"].ToString(),
-				(ResourceType)(int)itemData[i]["resource"] ["type1"],
-				(ResourceType)(int)itemData[i]["resource"] ["type2"],
-				(int)itemData[i]["resource"]["quantity1"],
-				(int)itemData[i]["resource"]["quantity2"],
-				(bool)itemData[i]["craftingItem"],
-				(ItemRarity)(int)itemData[i]["rarity"]
+			// Check if item is a crafting item
+			if ((bool)itemData [i] ["craftingItem"]) {
+				
+				// Check if item itself is craftable
+				if ((bool)itemData [i] ["craftable"]) {
+
+					// Check if item is a task item
+					if ((bool)itemData [i] ["taskItem"]) {
+						AddTaskItem (itemData [i]);
+
+					} else {
+						AddCaftingItem (true, itemData [i]);
+					}
+				// Not Craftable
+				} else {
+					AddCaftingItem (false, itemData [i]);
+				}
+			
+			// Not a crafting item
+			} else {
+				AddItem (itemData [i]);
+			}
+		}
+	}
+
+	private void AddTaskItem(JsonData data) {
+		database.Add (new TaskItem (
+			(int)data ["id"], 
+			data ["title"].ToString (), 
+			data ["slug"].ToString (),
+			data ["description"].ToString (),
+			ConstructResourceDictionary (data ["resources"] ["types"], data ["resources"] ["quantities"]),
+			(bool)data ["craftingItem"],
+			(ItemRarity)(int)data ["rarity"],
+			(bool)data ["craftable"],
+			ConstructResourceDictionary (data ["requiredResources"] ["types"], data ["requiredResources"] ["quantities"]),
+			(bool)data["taskItem"],
+			ConstructCraftingItemDictionary(data["requiredItems"]["IDs"], data["requiredItems"]["quantities"])
+		));
+	}
+
+	private void AddCaftingItem(bool craftable, JsonData data) {
+		if (craftable) {
+			database.Add (new CraftingItem (
+				(int)data ["id"], 
+				data ["title"].ToString (), 
+				data ["slug"].ToString (),
+				data ["description"].ToString (),
+				ConstructResourceDictionary (data ["resources"] ["types"], data ["resources"] ["quantities"]),
+				(bool)data ["craftingItem"],
+				(ItemRarity)(int)data ["rarity"],
+				(bool)data ["craftable"],
+				ConstructResourceDictionary (data ["requiredResources"] ["types"], data ["requiredResources"] ["quantities"]),
+				(bool)data["taskItem"]
+			));
+		} else {
+			database.Add (new CraftingItem (
+				(int)data ["id"], 
+				data ["title"].ToString (), 
+				data ["slug"].ToString (),
+				data ["description"].ToString (),
+				ConstructResourceDictionary (data ["resources"] ["types"], data ["resources"] ["quantities"]),
+				(bool)data ["craftingItem"],
+				(ItemRarity)(int)data ["rarity"],
+				(bool)data ["craftable"]
 			));
 		}
+	}
+
+	private void AddItem(JsonData data) {
+		database.Add (new Item (
+			(int)data ["id"], 
+			data ["title"].ToString (), 
+			data ["slug"].ToString (),
+			data ["description"].ToString (),
+			ConstructResourceDictionary(data["resources"]["types"], data["resources"]["quantities"]),
+			(bool)data ["craftingItem"],
+			(ItemRarity)(int)data ["rarity"]
+		));
+	}
+
+	private Dictionary<ResourceType, int> ConstructResourceDictionary(JsonData resourceList, JsonData quantities) {
+		Dictionary<ResourceType, int> resourcesNquantities = new Dictionary<ResourceType, int> ();
+		for (int i = 0; i < resourceList.Count; i++) {
+			resourcesNquantities.Add ((ResourceType)(int)resourceList [i.ToString ()], (int)quantities [i.ToString ()]);
+		}
+
+		return resourcesNquantities;
+	}
+
+	private Dictionary<CraftingItem, int> ConstructCraftingItemDictionary(JsonData itemIDList, JsonData quantities) {
+		Dictionary<CraftingItem, int> itemsNquantities = new Dictionary<CraftingItem, int>();
+		for (int i = 0; i < itemIDList.Count; i++) {
+			Item itemToAdd = FetchItemByID ((int)itemIDList [i.ToString()]);
+			Debug.Assert (itemToAdd.ID != -1, "Invalid Item parsed");
+			Debug.Assert (itemToAdd.IsCraftingItem, "Not a crafting Item");
+			itemsNquantities.Add ((CraftingItem)itemToAdd, (int)quantities [i.ToString()]);
+		}
+
+		return itemsNquantities;
 	}
 
 	public Item FetchItemByID(int id) {
@@ -65,32 +159,28 @@ public class ItemDatabase : MonoBehaviour {
 	private void ConstructItemRarityList() {
 		for (int i = 0; i < database.Count; i++) {
 			switch (database [i].Rarity) {
-			case ItemRarity.Common:
-				// common
+			case ItemRarity.Common_:
+			// common
 				commonItemsID.Add (database [i].ID);
 //				Debug.Log ("name: " + database [i].Title + " added to common.");
 				break;
 
-			case ItemRarity.Uncommon:
-				// uncommon
+			case ItemRarity.Uncommon_:
+			// uncommon
 				uncommonItemsID.Add (database [i].ID);
 //				Debug.Log ("name: " + database [i].Title + " added to uncommon.");
 				break;
 
-			case ItemRarity.Rare:
-				// rare
+			case ItemRarity.Rare_:
+			// rare
 				rareItemsID.Add (database [i].ID);
 //				Debug.Log ("name: " + database [i].Title + " added to rare.");
 				break;
 
-			case ItemRarity.SuperRare:
-				// super-rare
+			case ItemRarity.Super_Rare:
+			// super-rare
 				superItemsID.Add (database [i].ID);
 //				Debug.Log ("name: " + database [i].Title + " added to super rare.");
-				break;
-
-			default:
-				Debug.Log ("Unknown rarity detected in items database.");
 				break;
 			}
 		}
@@ -106,16 +196,16 @@ public class ItemDatabase : MonoBehaviour {
 		int chosenItemID = 0;
 		
 		switch (rarity) {
-		case ItemRarity.Common:
+		case ItemRarity.Common_:
 			chosenItemID = commonItemsID[Mathf.FloorToInt (Random.Range (0, commonItemsID.Count))];
 			break;
-		case ItemRarity.Uncommon:
+		case ItemRarity.Uncommon_:
 			chosenItemID = uncommonItemsID[Mathf.FloorToInt (Random.Range (0, uncommonItemsID.Count))];
 			break;
-		case ItemRarity.Rare:
+		case ItemRarity.Rare_:
 			chosenItemID = rareItemsID[Mathf.FloorToInt (Random.Range (0, rareItemsID.Count))];
 			break;
-		case ItemRarity.SuperRare:
+		case ItemRarity.Super_Rare:
 			chosenItemID = superItemsID[Mathf.FloorToInt (Random.Range (0, superItemsID.Count))];
 			Debug.Log ("Super rare item ID: " + chosenItemID + " name: " + database[chosenItemID].Title);
 			break;

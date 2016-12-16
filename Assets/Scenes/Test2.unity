@@ -1618,6 +1618,11 @@ Prefab:
       propertyPath: myTypes.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114000010097314748, guid: 9470df1328dad4feda3b0b9ac66d590b,
+        type: 2}
+      propertyPath: rubbishTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4000011966344986, guid: 9470df1328dad4feda3b0b9ac66d590b, type: 2}
       propertyPath: m_LocalPosition.x
       value: 3
@@ -1648,6 +1653,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011966344986, guid: 9470df1328dad4feda3b0b9ac66d590b, type: 2}
       propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010097314748, guid: 9470df1328dad4feda3b0b9ac66d590b,
+        type: 2}
+      propertyPath: rubbishTypes.Array.data[0]
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3451,6 +3461,11 @@ Prefab:
       propertyPath: myTypes.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011625261860, guid: ae4cd38f5ec904080a3e4c25af658ba6,
+        type: 2}
+      propertyPath: rubbishTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4000011383136272, guid: ae4cd38f5ec904080a3e4c25af658ba6, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3
@@ -3481,6 +3496,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011383136272, guid: ae4cd38f5ec904080a3e4c25af658ba6, type: 2}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011625261860, guid: ae4cd38f5ec904080a3e4c25af658ba6,
+        type: 2}
+      propertyPath: rubbishTypes.Array.data[0]
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3861,6 +3881,11 @@ Prefab:
         type: 2}
       propertyPath: myTypes.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011207158460, guid: b03d0cc97e4134941ad098a5ed6793cb,
+        type: 2}
+      propertyPath: rubbishTypes.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4000012173119200, guid: b03d0cc97e4134941ad098a5ed6793cb, type: 2}
       propertyPath: m_LocalPosition.x
@@ -4528,6 +4553,7 @@ GameObject:
   - component: {fileID: 2099790484}
   - component: {fileID: 2099790485}
   - component: {fileID: 2099790486}
+  - component: {fileID: 2099790487}
   m_Layer: 0
   m_Name: Databases
   m_TagString: Databases
@@ -4590,6 +4616,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85c9561b9c1be4470bf122045789be8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2099790487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2099790481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e074c01a720ed4b14a86ede1b6396821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2103512515

@@ -66,7 +66,7 @@ public class InventoryDatabase : MonoBehaviour {
 	// --------------- For UI elements ---------------
 	public List<string> GenerateInventoryStrings() {
 		List<string> inventoryItems = new List<string> ();
-		List<Item> keys = new List<Item>(inventory.Keys);
+//		List<Item> keys = new List<Item>(inventory.Keys);
 
 		foreach (Item key in inventory.Keys) {
 			string itemString = "<b>" + key.Title + "</b>\tQuantity: " + inventory [key] + "\n" +

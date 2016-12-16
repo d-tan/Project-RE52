@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ResourceManager : MonoBehaviour {
 
@@ -16,19 +17,18 @@ public class ResourceManager : MonoBehaviour {
 
 	public void AddResourceValue(int itemID, RubbishType rubbishType, int multiplier, int sign = 1) {
 		Item item = itemDatabase.FetchItemByID (itemID);
-		Resource resourceToAdd = resourceDatabase.FetchResourceByID ((int)item.Resource1);
-		bool first = true; // boolean to determine if the resource to add to is the first or second.
-
-		if (item.Resource1 != item.Resource2) {
-			if (resourceToAdd.RubbishType != rubbishType) {
-				resourceToAdd = resourceDatabase.FetchResourceByID ((int)item.Resource2);
-				first = false;
-			}
+		List<Resource> itemsResources = new List<Resource>();
+		foreach (ResourceType key in item.ResourcesGiven.Keys) {
+			itemsResources.Add (resourceDatabase.FetchResourceByID ((int)key));
 		}
-		if (first) {
-			resourceToAdd.Quantity += sign * item.Quantity1 * multiplier;
-		} else {
-			resourceToAdd.Quantity += sign * item.Quantity2 * multiplier;
+
+		for (int i = 0; i < itemsResources.Count; i++) {
+			if (itemsResources [i].RubbishType == rubbishType) {
+				// Add to the quantity
+				itemsResources [i].Quantity += 
+					sign * item.ResourcesGiven [(ResourceType)itemsResources [i].ID] * multiplier;
+				// Resource ID should match ResourceType enum
+			}
 		}
 
 	}

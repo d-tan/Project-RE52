@@ -133,7 +133,7 @@ public class TouchTest : MonoBehaviour {
 				if (HOScript) {
 					HOScript.IsBeingHeld = true; // tell the object it is being held
 					heldObject.layer = 9; // "HeldItem" layer // set the layer so it's not interactible with other items
-					UIManager.ChangeIndicatorColors(true, HOScript.MyRubbishTypes[0], HOScript.MyRubbishTypes[1]);
+//					UIManager.ChangeIndicatorColors(true, HOScript.RubbishTypes[0], HOScript.RubbishTypes[1]);
 				}
 
 				// Check if there is a Rigidbody2D
@@ -204,8 +204,8 @@ public class TouchTest : MonoBehaviour {
 	}
 
 	private void HighlightBin(RubbishItem script) {
-		foreach (RubbishType type in script.MyRubbishTypes) {
-			switch (type) {
+		for (int i = 0; i < script.RubbishTypes.Count; i++) {
+			switch (script.RubbishTypes[i]) {
 			case RubbishType.General:
 				binScripts [(int)RubbishType.General].GlowIndicator (isHolding);
 				break;

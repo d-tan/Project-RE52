@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 // MUST be attached to conveyor belt object.
@@ -109,21 +110,21 @@ public class RubbishItemSpawner : MonoBehaviour {
 		// Get Item info from database
 
 		Item item = itemDatabase.FetchItemByID (PickRandomItem());
-		spawnedObject.GetComponent<RubbishItem> ().MyRubbishItemID = item.ID; // set RubbishItem class itemId
 
-		RubbishType[] rubbishTypes = new RubbishType[2]; // get rubbish types from item class
-		// Get resource from resouces database by ID, then retrieve its rubbish type
-		rubbishTypes [0] = resourceDatabase.FetchResourceByID((int)item.Resource1).RubbishType;
-		rubbishTypes [1] = resourceDatabase.FetchResourceByID((int)item.Resource2).RubbishType;
+		RubbishItem spawnedObjectScript = spawnedObject.GetComponent<RubbishItem> ();
+		spawnedObjectScript.RubbishItemID = item.ID; // set RubbishItem class itemId
 
-		ResourceType[] resourceTypes = new ResourceType[2];
-		resourceTypes [0] = item.Resource1;
-		resourceTypes [0] = item.Resource2;
+		List<RubbishType> rubbishTypes = new List<RubbishType> ();
+		List<ResourceType> resourceTypes = new List<ResourceType> ();
+
+		foreach (ResourceType type in item.ResourcesGiven.Keys) {
+			resourceTypes.Add (type);
+			rubbishTypes.Add (resourceDatabase.FetchResourceByID ((int)type).RubbishType);
+		}
 
 		spawnedObject.GetComponent<SpriteRenderer> ().sprite = item.Sprite; // set sprite
-		RubbishItem spawnedObjectScript = spawnedObject.GetComponent<RubbishItem> ();
-		spawnedObjectScript.MyRubbishTypes = rubbishTypes; // set rubbish types
-		spawnedObjectScript.MyResourceTypes = resourceTypes; // set resource types
+		spawnedObjectScript.RubbishTypes = rubbishTypes; // set rubbish types
+		spawnedObjectScript.ResourceTypes = resourceTypes; // set resource types
 		PolygonCollider2D spawnedObjectCollider = spawnedObject.AddComponent<PolygonCollider2D> (); // give polygon collider
 
 		// Move the Item if it's on the edge
@@ -144,16 +145,16 @@ public class RubbishItemSpawner : MonoBehaviour {
 		// Compare random value to rarity thresholds
 		if (randomNum <= rarityThresholds.w) { // Super-Rare
 			Debug.Log("SUPER-RARE " + randomNum);
-			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.SuperRare);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Super_Rare);
 
 		} else if (randomNum <= rarityThresholds.z) { // Rare
-			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Rare);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Rare_);
 
 		} else if (randomNum <= rarityThresholds.y) { // Uncommon
-			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Uncommon);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Uncommon_);
 
 		} else { // Common
-			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Common);
+			chosenItemID = itemDatabase.PickRandomItem (ItemRarity.Common_);
 		}
 
 		return chosenItemID;

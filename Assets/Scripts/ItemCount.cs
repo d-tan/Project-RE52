@@ -54,17 +54,26 @@ public class ItemCount : MonoBehaviour {
 		// Check if it's a rubbish item
 		if (otherScript) {
 			if (!otherScript.IsBeingHeld) {
+
+				bool rubbishAccepted = false;
+				for (int i = 0; i < otherScript.RubbishTypes.Count; i++) {
+					if (otherScript.RubbishTypes [i] == acceptedType) {
+						rubbishAccepted = true;
+						break;
+					}
+				}
+
 				// Check if the types match
-				if (otherScript.MyRubbishTypes[0] == acceptedType || otherScript.MyRubbishTypes[1] == acceptedType) {
+				if (rubbishAccepted) {
 					scoreManager.AddMinusScore (acceptedType, 1);
 
-					if (itemDatabase.FetchItemByID (otherScript.MyRubbishItemID).CraftingItem) {
-						inventoryDatabase.AddItemByID (otherScript.MyRubbishItemID);
+					if (itemDatabase.FetchItemByID (otherScript.RubbishItemID).IsCraftingItem) {
+						inventoryDatabase.AddItemByID (otherScript.RubbishItemID);
 //						Debug.Log ("Added Item to Inventory");
 //						Debug.Log(inventoryDatabase.Inventory [itemDatabase.FetchItemByID (otherScript.MyRubbishItemID)]);
 					}
 
-					resourceManager.AddResourceValue (otherScript.MyRubbishItemID, acceptedType, scoreManager.CurrentMultiplier);
+					resourceManager.AddResourceValue (otherScript.RubbishItemID, acceptedType, scoreManager.CurrentMultiplier);
 					StartCoroutine (CorrectFlash ());
 				} else {
 					scoreManager.AddMinusScore (acceptedType, -1);

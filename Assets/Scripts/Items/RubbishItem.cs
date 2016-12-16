@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum RubbishType {
 	General,
@@ -9,15 +10,14 @@ public enum RubbishType {
 
 public class RubbishItem : MonoBehaviour {
 
-	//	private int maxNumofTypes = 2;
-	public RubbishType[] myTypes = new RubbishType[2];
+	public List<RubbishType> rubbishTypes = new List<RubbishType> ();
+	private List<ResourceType> resourceTypes = new List<ResourceType> ();
 
 	//	private Collider2D itemCollider;
 	private Rigidbody2D rb;
 	bool endOfConveyorbelt = false;
 	bool isHeld = false;
 	private int itemID;
-	private ResourceType[] resourceTypes = new ResourceType[2];
 
 	void Start() {
 //		itemCollider = GetComponent<Collider2D> ();
@@ -29,16 +29,16 @@ public class RubbishItem : MonoBehaviour {
 		this.gameObject.layer = 8; // "Item" layer
 	}
 
-	public RubbishType[] MyRubbishTypes {
+	public List<RubbishType> RubbishTypes {
 		get { 
-			return myTypes;
+			return rubbishTypes;
 		}
 		set {
-			myTypes = value;
+			rubbishTypes = value;
 		}
 	}
 
-	public int MyRubbishItemID {
+	public int RubbishItemID {
 		get {
 			return itemID;
 		}
@@ -47,7 +47,7 @@ public class RubbishItem : MonoBehaviour {
 		}
 	}
 
-	public ResourceType[] MyResourceTypes {
+	public List<ResourceType> ResourceTypes {
 		get {
 			return resourceTypes;
 		}

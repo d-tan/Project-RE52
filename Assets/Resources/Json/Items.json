@@ -4,11 +4,13 @@
 		"title" : "Battery",
 		"slug" : "battery",
 		"description" : "Small source of power.",
-		"resource" : {
-			"type1" : 1,
-			"type2" : 1,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 1
+			},
+			"quantities" : {
+				"0" : 1
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -19,11 +21,13 @@
 		"title" : "Bush",
 		"slug" : "bush",
 		"description" : "An uprooted bush.",
-		"resource" : {
-			"type1" : 6,
-			"type2" : 6,
-			"quantity1" : 15,
-			"quantity2" : 15
+		"resources" : {
+			"types" : {
+				"0" : 6
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 3
@@ -34,11 +38,13 @@
 		"title" : "Cardboard Box",
 		"slug" : "cardboard_box",
 		"description" : "A weary box, once used for storing objects.",
-		"resource" : {
-			"type1" : 5,
-			"type2" : 5,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 5
+			},
+			"quantities" : {
+				"0" : 1
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -49,11 +55,13 @@
 		"title" : "Generic General",
 		"slug" : "generic_general",
 		"description" : "A generic piece of general rubbish",
-		"resource" : {
-			"type1" : 3,
-			"type2" : 3,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 3
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -64,11 +72,13 @@
 		"title" : "Generic Organic",
 		"slug" : "generic_organic",
 		"description" : "A generic piece of organic rubbish",
-		"resource" : {
-			"type1" : 6,
-			"type2" : 6,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 6
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -79,11 +89,15 @@
 		"title" : "Generic Recycle",
 		"slug" : "generic_recycle",
 		"description" : "A generic piece of recycle rubbish.",
-		"resource" : {
-			"type1" : 5,
-			"type2" : 7,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 5,
+				"1" : 7
+			},
+			"quantities" : {
+				"0" : 2,
+				"1" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -94,11 +108,15 @@
 		"title" : "Glass Bottle",
 		"slug" : "glass_bottle",
 		"description" : "An object for holding liquids.",
-		"resource" : {
-			"type1" : 7,
-			"type2" : 5,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 7,
+				"1" : 5
+			},
+			"quantities" : {
+				"0" : 2,
+				"1" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 0
@@ -109,11 +127,13 @@
 		"title" : "Ham Shank",
 		"slug" : "ham_shank",
 		"description" : "A rotten ham shank.",
-		"resource" : {
-			"type1" : 2,
-			"type2" : 2,
-			"quantity1" : 15,
-			"quantity2" : 15
+		"resources" : {
+			"types" : {
+				"0" : 2
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 2
@@ -124,11 +144,13 @@
 		"title" : "Log",
 		"slug" : "log",
 		"description" : "A small part of a tree.",
-		"resource" : {
-			"type1" : 5,
-			"type2" : 5,
-			"quantity1" : 50,
-			"quantity2" : 50
+		"resources" : {
+			"types" : {
+				"0" : 5
+			},
+			"quantities" : {
+				"0" : 4
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 2
@@ -139,13 +161,16 @@
 		"title" : "Newspaper",
 		"slug" : "newspaper",
 		"description" : "November 20XX, Earth Times' issue.",
-		"resource" : {
-			"type1" : 5,
-			"type2" : 5,
-			"quantity1" : 10,
-			"quantity2" : 10
+		"resources" : {
+			"types" : {
+				"0" : 5
+			},
+			"quantities" : {
+				"0" : 1
+			}
 		},
 		"craftingItem" : true,
+		"craftable" : false,
 		"rarity" : 1
 	},
 
@@ -154,14 +179,26 @@
 		"title" : "Pipe",
 		"slug" : "pipe",
 		"description" : "A sturdy tube for transporting liquids and gas.",
-		"resource" : {
-			"type1" : 4,
-			"type2" : 4,
-			"quantity1" : 50,
-			"quantity2" : 50
+		"resources" : {
+			"types" : {
+				"0" : 4
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
-		"craftingItem" : false,
-		"rarity" : 0
+		"craftingItem" : true,
+		"craftable" : true,
+		"requiredResources" : {
+			"types" : {
+				"0" : 4
+			},
+			"quantities" : {
+				"0" : 5
+			}
+		},
+		"rarity" : 0,
+		"taskItem" : false
 	},
 
 	{
@@ -169,13 +206,56 @@
 		"title" : "Tin Can",
 		"slug" : "tin_can",
 		"description" : "A tin can.",
-		"resource" : {
-			"type1" : 4,
-			"type2" : 4,
-			"quantity1" : 20,
-			"quantity2" : 20
+		"resources" : {
+			"types" : {
+				"0" : 4
+			},
+			"quantities" : {
+				"0" : 2
+			}
 		},
 		"craftingItem" : false,
 		"rarity" : 1
+	},
+
+	{
+		"id" : 200,
+		"title" : "Farm",
+		"slug" : "farm",
+		"description" : "A place to grow plants.",
+		"resources" : {
+			"types" : {
+				"0" : 4
+			},
+			"quantities" : {
+				"0" : 2
+			}
+		},
+		"craftingItem" : true,
+		"rarity" : -1,
+		"craftable" : true,
+		"requiredResources" : {
+			"types" : {
+				"0" : 2,
+				"1" : 6
+			},
+			"quantities" : {
+				"0" : 300,
+				"1" : 30
+			},
+			"reference" : {
+				"ID 2" : "fertaliser",
+				"ID 6" : "plants"
+			}
+		},
+		"taskItem" : true,
+		"requiredItems" : {
+			"IDs" : {
+				"0" : 10
+			},
+			"quantities" : {
+				"0" : 20
+			}
+		}
 	}
 ]
