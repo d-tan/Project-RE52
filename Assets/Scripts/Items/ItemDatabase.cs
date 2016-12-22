@@ -40,6 +40,8 @@ public class ItemDatabase : MonoBehaviour {
 		ConstructItemDatabase ();
 		ConstructItemRarityList ();
 	}
+
+	// ---------------- CONSTRUCTION ---------------- vv
 		
 	private void ConstructItemDatabase() {
 		for (int i = 0; i < itemData.Count; i++) {
@@ -145,15 +147,7 @@ public class ItemDatabase : MonoBehaviour {
 		return itemsNquantities;
 	}
 
-	public Item FetchItemByID(int id) {
-		for (int i = 0; i < database.Count; i++) {
-			if (database [i].ID == id) {
-				return database [i];
-			}
-		}
 
-		return new Item ();
-	}
 
 	// Constructs lists of item IDs by the rarity
 	private void ConstructItemRarityList() {
@@ -186,6 +180,8 @@ public class ItemDatabase : MonoBehaviour {
 		}
 	}
 
+	// ---------------- CONSTRUCTION ---------------- ^^
+
 	/// <summary>
 	/// Picks a random item from a list based on given rarity.
 	/// </summary>
@@ -203,9 +199,15 @@ public class ItemDatabase : MonoBehaviour {
 			chosenItemID = uncommonItemsID[Mathf.FloorToInt (Random.Range (0, uncommonItemsID.Count))];
 			break;
 		case ItemRarity.Rare_:
+			if (rareItemsID.Count < 1) {
+				goto case ItemRarity.Uncommon_;
+			}
 			chosenItemID = rareItemsID[Mathf.FloorToInt (Random.Range (0, rareItemsID.Count))];
 			break;
 		case ItemRarity.Super_Rare:
+			if (superItemsID.Count < 1) {
+				goto case ItemRarity.Uncommon_;
+			}
 			chosenItemID = superItemsID[Mathf.FloorToInt (Random.Range (0, superItemsID.Count))];
 			Debug.Log ("Super rare item ID: " + chosenItemID + " name: " + database[chosenItemID].Title);
 			break;
@@ -215,5 +217,77 @@ public class ItemDatabase : MonoBehaviour {
 		}
 
 		return chosenItemID;
+	}
+
+	// ---------------- SEARCH ----------------
+
+	public Item FetchItemByID(int id) {
+		for (int i = 0; i < database.Count; i++) {
+			if (database [i].ID == id) {
+				return database [i];
+			}
+		}
+
+		return new Item ();
+	}
+
+	public CraftingItem FetchCraftingItemByID(int id) {
+		Item itemToCheck = FetchItemByID (id);
+		Debug.Assert (itemToCheck.ID != -1, "Item id: " + id + " cannot be found.");
+
+		Debug.Assert (itemToCheck.IsCraftingItem, "item id: " + id + " is not a CraftingItem.");
+		CraftingItem craftingItem = (CraftingItem)itemToCheck;
+
+		if (craftingItem != null) {
+			return craftingItem;
+		} else {
+			return new CraftingItem ();
+		}
+	}
+
+	public TaskItem FetchTaskItemByID(int id) {
+		Item itemToCheck = FetchItemByID (id);
+		Debug.Assert (itemToCheck.ID != -1, "Item id: " + id + " cannot be found.");
+
+		Debug.Assert (itemToCheck.IsCraftingItem, "item id: " + id + " is not a CraftingItem.");
+		CraftingItem craftingItem = (CraftingItem)itemToCheck;
+		Debug.Assert (craftingItem.IsTaskItem, "item id: " + id + " is not a TaskItem.");
+		TaskItem taskItem = (TaskItem)craftingItem;
+
+		if (taskItem != null) {
+			return taskItem;
+		} else {
+			return new TaskItem();
+		}
+	}
+
+
+	// ---------------- FOR UI ----------------
+
+	public List<string> GenerateTaskItemDetails(int id) {
+		List<string> details = new List<string> ();
+		TaskItem taskItem = FetchTaskItemByID (id);
+
+		Debug.Assert (taskItem.ID != -1);
+
+		details.Add (taskItem.Title);
+		details.Add (taskItem.Description);
+
+		return details;
+	}
+
+	public List<string> GenerateTaskItemResourceList(int id) {
+		List<string> resourceList = new List<string>();
+		TaskItem taskItem = FetchTaskItemByID (id);
+
+		Debug.Assert (taskItem.ID != -1);
+
+		Dictionary<ResourceType, int> resourcesRequired = taskItem.RequiredResources;
+
+		foreach (ResourceType key in resourcesRequired.Keys) {
+			resourceList.Add(key + ": " + resourcesRequired [key]);
+		}
+
+		return resourceList;
 	}
 }

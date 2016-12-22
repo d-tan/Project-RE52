@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Task {
 
+	private float progressCompletion = 100.0f;
+
 	public int ID { get; set; }
 	public string Title { get; set; }
 	public string Slug { get; set; }
@@ -33,6 +35,17 @@ public class Task {
 
 	public void CheckCompletion() {
 		// if progress is finished then set Completed variable
+		if (Progress >= progressCompletion) {
+			Completed = true;
+			Debug.Log (Title + " task has been compelted");
+		} else {
+			Completed = false;
+		}
+	}
 
+	public float ProgressCompletion {
+		get {
+			return progressCompletion;
+		}
 	}
 }

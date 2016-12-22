@@ -30,7 +30,7 @@
 			}
 		},
 		"craftingItem" : false,
-		"rarity" : 3
+		"rarity" : 1
 	},
 
 	{
@@ -136,7 +136,7 @@
 			}
 		},
 		"craftingItem" : false,
-		"rarity" : 2
+		"rarity" : 0
 	},
 
 	{
@@ -197,7 +197,7 @@
 				"0" : 5
 			}
 		},
-		"rarity" : 0,
+		"rarity" : 1,
 		"taskItem" : false
 	},
 
