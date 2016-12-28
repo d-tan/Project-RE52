@@ -4,6 +4,7 @@ using System.Collections;
 public enum ResourceType {
 	// enums will need to be added manually in ALPHABETICAL order if more Resourcec types are added
 	// from the resource list file that is read.
+	Unknown = -1,
 	Building_Materials,
 	Electronics,
 	Fertaliser,
@@ -30,7 +31,11 @@ public class Resource {
 		this.Slug = slug;
 		this.Description = desc;
 		this.RubbishType = type;
-		this.Quantity = 0;
+		this.Quantity = 500;
 
+	}
+
+	public Resource() {
+		this.ID = -1;
 	}
 }

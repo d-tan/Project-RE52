@@ -147,7 +147,21 @@ public class ItemDatabase : MonoBehaviour {
 		return itemsNquantities;
 	}
 
+	// Used for TaskManager
+	public Dictionary<TaskItem, int> ConstructTaskItemDictionary() {
+		Dictionary<TaskItem, int> list = new Dictionary<TaskItem, int> ();
 
+		for (int i = 0; i < database.Count; i++) {
+			if (database [i].IsCraftingItem) {
+				CraftingItem item = (CraftingItem)database [i];
+				if (item.IsTaskItem) {
+					list.Add ((TaskItem)item, 0);
+				}
+			}
+		}
+
+		return list;
+	}
 
 	// Constructs lists of item IDs by the rarity
 	private void ConstructItemRarityList() {

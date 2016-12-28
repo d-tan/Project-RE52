@@ -161,7 +161,7 @@ public class TouchTest : MonoBehaviour {
 		if (HOScript) {
 			HighlightBin (HOScript);
 			HOScript.IsBeingHeld = false;
-			UIManager.ChangeIndicatorColors (false);
+//			UIManager.ChangeIndicatorColors (false);
 		}
 
 		if (heldObject) {

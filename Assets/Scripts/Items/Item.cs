@@ -9,10 +9,6 @@ public class Item {
 	public string Slug { get; set; }
 	public string Description { get; set; }
 	public Dictionary <ResourceType, int> ResourcesGiven { get; set; }
-//	public ResourceType Resource1 { get; set; }
-//	public ResourceType Resource2 { get; set; }
-//	public int Quantity1 { get; set; }
-//	public int Quantity2 { get; set; }
 	public bool IsCraftingItem { get; set; }
 	public ItemRarity Rarity { get; set; }
 

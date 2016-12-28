@@ -50,6 +50,24 @@ public class TaskDatabase : MonoBehaviour {
 		return taskItems;
 	}
 
+	// used for TaskManager
+	public Dictionary<TaskItem, List<Task>> ConstructTaskItemTasks(Dictionary<TaskItem, int> activeTaskItems) {
+		Dictionary<TaskItem, List<Task>> taskItemTasks = new Dictionary<TaskItem, List<Task>> ();
+
+		foreach (TaskItem key in activeTaskItems.Keys) {
+			List<Task> tasks = new List<Task> ();
+			foreach (Task task in database) {
+				if (task.TaskItems.ContainsKey (key)) {
+					tasks.Add (task);
+				}
+			}
+
+			taskItemTasks.Add (key, tasks);
+		}
+
+		return taskItemTasks;
+	}
+
 	public Task FetchTaskByID(int id) {
 		for (int i = 0; i < database.Count; i++) {
 			if (id == database [i].ID) {
