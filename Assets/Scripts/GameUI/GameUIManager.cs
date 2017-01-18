@@ -3,15 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-
-
-
 public class GameUIManager : MonoBehaviour {
 
 //	public Image[] indicators = new Image[2];
 //	private Color[] indicatorColors = new Color[4];
 
 	public Text resourceDisplay;
+
+	// Menu Backtrack
+	List<GameObject> panelHierachy = new List<GameObject> ();
+	public GameObject menuBackTrackPanel;
+
+	// Panel Swapping
+	private enum Panels { // Alphabetical order
+		Inventory_,
+		Resources_,
+		Tasks_,
+		Upgrades_
+	}
+
+	delegate void PanelToggle (bool toggling);
+	private List<PanelToggle> toggleFunctions = new List<PanelToggle>();
+	private int panelEnumLength = System.Enum.GetValues (typeof(Panels)).Length;
 
 	// Upgrades
 	public GameObject upgradesPanel;
@@ -95,7 +108,7 @@ public class GameUIManager : MonoBehaviour {
 		taskDatabase = databases.GetComponent<TaskDatabase>();
 		taskManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TaskManager> ();
 
-
+		GeneratePanelList ();
 	}
 
 
@@ -126,10 +139,52 @@ public class GameUIManager : MonoBehaviour {
 //
 //	}
 
+	// --------- MENU BACKTRACK ---------
+
+	public void AddPanelToHierachy(GameObject panel) {
+//		Debug.Log ("Adding: " + panel.name);
+		panelHierachy.Add (panel);
+
+		// Turn on backtrack panel
+		menuBackTrackPanel.SetActive (true);
+
+		// Set backtrack panel to be behind the given panel
+		menuBackTrackPanel.transform.SetSiblingIndex(panel.transform.GetSiblingIndex () - 1);
+	}
+
+	public void TurnOffTopPanel() {
+		if (panelHierachy.Count > 0) {
+			// Get the last item in the list and turn it off
+			panelHierachy [panelHierachy.Count - 1].SetActive (false);
+
+//			Debug.Log ("Removing: " + panelHierachy [panelHierachy.Count - 1].name + " | " + (panelHierachy.Count - 1));
+			// remove from list
+			panelHierachy.RemoveAt (panelHierachy.Count - 1);
+
+			// Check if list is now empty
+			if (panelHierachy.Count == 0) {
+				// reset it and turn it off
+				menuBackTrackPanel.transform.SetSiblingIndex(0);
+				menuBackTrackPanel.SetActive (false);
+
+			// List is not empty
+			} else {
+				
+				// Set backtrack panel to be behind new top panel
+				menuBackTrackPanel.transform.SetSiblingIndex(
+					panelHierachy [panelHierachy.Count - 1].transform.GetSiblingIndex ());
+//				Debug.Log ("Now behind: " + panelHierachy [panelHierachy.Count - 1].name);
+			}
+		}
+	}
+
+
 	// --------- GENERAL UI METHODS ---------
 	private void ClearDisplay(GameObject panel) {
 		for (int i = 0; i < panel.transform.childCount; i++) {
-			Destroy (panel.transform.GetChild (i).gameObject);
+			GameObject child = panel.transform.GetChild (i).gameObject;
+			child.GetComponent<Button> ().onClick.RemoveAllListeners ();
+			Destroy (child);
 		}
 	}
 
@@ -159,6 +214,27 @@ public class GameUIManager : MonoBehaviour {
 		return craftButton;
 	}
 
+	// --------- PANEL SWAP ---------
+
+	private void GeneratePanelList() {
+		toggleFunctions.Add (ToggleInventoryDisplay);
+		toggleFunctions.Add (TurnOffResourceDisplay);
+		toggleFunctions.Add (ToggleTasksDisplay);
+		toggleFunctions.Add (ToggleUpgradesDisplay);
+	}
+
+	/// <summary>
+	/// Turns off all other panels except the one parsed.
+	/// </summary>
+	/// <param name="panel">the panel object to be kept on.</param>
+	private void TurnOffPanels(Panels panel) {
+		for (int i = 0; i < panelEnumLength; i++) {
+			if ((int)panel != i) {
+				toggleFunctions [i] (false);
+			}
+		}
+	}
+
 	// --------- RESOURCES UI ---------
 	public void DisplayResource(string text, bool checkIfAvaliable = false) {
 		if (!checkIfAvaliable) {
@@ -172,14 +248,21 @@ public class GameUIManager : MonoBehaviour {
 		}
 	}
 
-	public void TurnOffResourceDisplay() {
+	public void TurnOffResourceDisplay(bool state = false) {
 		resourceDisplay.gameObject.SetActive (false);
 	}
 		
 
 	// --------- UPGRADES UI ---------
-	public void ToggleUpgradesDisplay() {
-		upgradesDisplaying = !upgradesDisplaying;
+	public void ToggleUpgradesDisplay(bool toggling = true) {
+		if (toggling) {
+			upgradesDisplaying = !upgradesDisplaying;
+			if (upgradesDisplaying) {
+				TurnOffPanels (Panels.Upgrades_);
+			}
+		} else {
+			upgradesDisplaying = false;
+		}
 		upgradesPanel.SetActive (upgradesDisplaying);
 	}
 
@@ -231,10 +314,19 @@ public class GameUIManager : MonoBehaviour {
 
 
 	// --------- INVENTORY UI ---------
-	public void ToggleInventoryDisplay() {
-		inventoryDisplaying = !inventoryDisplaying;
+	/// <summary>
+	/// Toggles the inventory display.
+	/// </summary>
+	/// <param name="toggling">If set to <c>true</c> Inventory will toggle as normal, else inventory will be turned off.</param>
+	public void ToggleInventoryDisplay(bool toggling = true) {
+		if (toggling) {
+			inventoryDisplaying = !inventoryDisplaying;
+		} else {
+			inventoryDisplaying = false;
+		}
 		inventoryGroup.SetActive (inventoryDisplaying);
 		if (inventoryDisplaying) {
+			TurnOffPanels (Panels.Inventory_);
 			DisplayInventory ();
 		}
 	}
@@ -262,14 +354,26 @@ public class GameUIManager : MonoBehaviour {
 	// ---------------------------------------------------------------------------------------------------
 
 	// --------- TASKS UI ---------
-	public void ToggleTasksDisplay() {
-		taskDisplaying = !taskDisplaying;
+	public void ToggleTasksDisplay(bool toggling = true) {
+		if (toggling) {
+			taskDisplaying = !taskDisplaying;
+		} else {
+			taskDisplaying = false;
+		}
 		taskGroup.SetActive (taskDisplaying);
 
 		if (taskDisplaying) {
+			// Turn off other panels to only show Tasks panel
+			TurnOffPanels (Panels.Tasks_);
+
+			// Turn off sub panels to only show Tasks panel
 			taskUIGroup.ToggleGroup (false);
 			taskItemUIGroup.ToggleGroup (false);
 			itemUIGroup.ToggleGroup (false);
+			taskItemCraftWarning.ToggleGroup (false);
+
+			// Turn of backtrack panel
+			menuBackTrackPanel.SetActive (false);
 			DisplayTasks ();
 		}
 	}
@@ -284,15 +388,16 @@ public class GameUIManager : MonoBehaviour {
 
 			newSlot.GetComponentInChildren<Text> ().text = taskDescriptions [i];
 			int index = i;
-			newSlot.GetComponent<Button> ().onClick.AddListener (delegate {
-				DisplayTaskBreakdown(index);
-			});
+			newSlot.GetComponent<Button> ().onClick.AddListener (() =>
+				DisplayTaskBreakdown(index));
 		}
 
 	}
 
 	public void DisplayTaskBreakdown(int taskID) {
 		taskUIGroup.ToggleGroup (true);
+
+		taskUIGroup.SetBreakdownText (taskID);
 
 		ClearDisplay (taskUIGroup.ItemsPanel);
 		Task task = taskDatabase.FetchTaskByID (taskID);
@@ -303,9 +408,8 @@ public class GameUIManager : MonoBehaviour {
 		foreach (TaskItem key in itemList.Keys) {
 			Button slotButton = InstantiateSlot (taskUIGroup.Slot, taskUIGroup.ItemsPanel.transform, key.Sprite, itemList [key].ToString ());
 
-			slotButton.onClick.AddListener (delegate {
-				CheckTaskItemCraftingAvailable (key.ID);
-			});
+			slotButton.onClick.AddListener (() => 
+				DisplayTaskItemBreakdown(key.ID));
 		}
 	}
 
@@ -314,7 +418,7 @@ public class GameUIManager : MonoBehaviour {
 
 	// Populates the TaskItem breakdown panel
 	public void DisplayTaskItemBreakdown(int taskItemID) {
-		taskItemUIGroup.groupObject.SetActive (true);
+		taskItemUIGroup.ToggleGroup (true);
 		ClearDisplay (taskItemUIGroup.ItemsPanel);
 
 		TaskItem taskItem = itemDatabase.FetchTaskItemByID (taskItemID);
@@ -323,9 +427,9 @@ public class GameUIManager : MonoBehaviour {
 		taskItemUIGroup.SetBreakdownText (taskItemID);
 		CreateItemList (taskItem);
 
-		taskItemUIGroup.CraftButton.onClick.AddListener (delegate {
-			CheckTaskItemCraftingAvailable(taskItemID);
-		});
+		taskItemUIGroup.CraftButton.onClick.AddListener (() =>
+			CheckTaskItemCraftingAvailable(taskItemID));
+		
 	}
 		
 	// Populates the ItemsPanel with the required items from the given TaskItem
@@ -367,13 +471,11 @@ public class GameUIManager : MonoBehaviour {
 
 			// Check if item is craftable
 			if (key.Craftable) {
-				instantiatedButton.onClick.AddListener (delegate {
-					DisplayItemBreakdown (key.ID);
-				});
+				instantiatedButton.onClick.AddListener (() =>
+					DisplayItemBreakdown (key.ID));
 			} else {
 				instantiatedButton.enabled = false;
 			}
-
 		}
 	}
 
@@ -387,7 +489,7 @@ public class GameUIManager : MonoBehaviour {
 	// ------ ITEM WARNING ------
 
 	public void CheckTaskItemCraftingAvailable(int taskItemID) {
-		taskItemCraftWarning.ToggleGroup (true);
+//		taskItemCraftWarning.ToggleGroup (true);
 
 		TaskItem taskItem = itemDatabase.FetchTaskItemByID (taskItemID);
 		Debug.Assert (taskItem.ID != -1, "Unknown TaskItem ID: " + taskItemID + "; Should not happen.");
@@ -420,14 +522,16 @@ public class GameUIManager : MonoBehaviour {
 			insufficientResources = true;
 			description += "We do not have enough resources to complete this action. We will need to gather more.";
 		}
-			
 
 		// Check if play has missing items (that are craftable)
 		if (missingItems.Count > 0) {
+			taskItemCraftWarning.ToggleGroup (true);
 			if (!hasUncraftable && !insufficientResources) {
 				description = "We are missing some items, but we have enough resources to make them.";
 				title = "Warning: Items Missing.";
 				taskItemCraftWarning.SetBreakdownText (taskItemID, totalResources, description, title);
+
+
 			} else {
 				
 				if (insufficientResources) {
@@ -437,31 +541,39 @@ public class GameUIManager : MonoBehaviour {
 				}
 				taskItemCraftWarning.SetBreakdownText (taskItemID, totalResources, description, title, false);
 
+
 			}
+			taskItemCraftWarning.CraftButton.onClick.RemoveAllListeners ();
+			taskItemCraftWarning.CraftButton.onClick.AddListener (() => {
+				taskItemCraftWarning.CraftTaskItem(taskItem, missingItems, totalResources);
+				taskItemUIGroup.RefreshResources(taskItem);
+			});
 
 		
 		// Player has no missing items (and sufficient resources)
 		} else {
-			// Craft the TaskItem !!!!!!!!!!!!!!!!!!!!
-
+			Debug.Log ("All pass. Task Item is crafted");
+			taskItemUIGroup.CraftTaskItem(taskItem);
+			taskItemUIGroup.RefreshResources(taskItem);
+			ClearDisplay (taskItemUIGroup.ItemsPanel);
+			CreateItemList (taskItem);
+			taskItemCraftWarning.ToggleGroup (false);
+			Debug.Log ("Toggling Warning Off");
 		}
-
-		taskItemCraftWarning.CraftButton.onClick.AddListener (delegate {
-			taskManager.AddActiveTaskItem (taskItem, 1);
-			taskItemCraftWarning.ToggleGroup(false);
-			taskUIGroup.ToggleGroup(false);
-		});
 	}
 
+	// Check if the player has enough resources to craft the item, including missin craftable items
 	private Dictionary<ResourceType, int> CheckResourceRequirements(TaskItem taskItem, Dictionary<CraftingItem, int> craftingItems) {
 		// Calculate total resources required to craft the TaskITem
-		Dictionary<ResourceType, int> totalResources = taskItem.RequiredResources;
+		Dictionary<ResourceType, int> totalResources = new Dictionary<ResourceType, int>();
+		foreach (ResourceType key in taskItem.RequiredResources.Keys) {
+			totalResources.Add (key, taskItem.RequiredResources [key]);
+		}
 
 		// Loop through each missing item
 		foreach (CraftingItem key in craftingItems.Keys) {
 			if (key.ID != -1 && key.Craftable) {
 				Dictionary<ResourceType, int> requiredResources = key.RequiredResources;
-
 				// loop through each resource required to craft this item
 				foreach (ResourceType resourceType in requiredResources.Keys) {
 					// Check if total resources list has the current resource type
@@ -482,6 +594,7 @@ public class GameUIManager : MonoBehaviour {
 			if (resource.Quantity < totalResources [key]) {
 				
 				// Add a key to the total resources list to signify that there are insufficient resources
+				Debug.Log("Adding unknown resource");
 				totalResources.Add (ResourceType.Unknown, -1);
 				break;
 			}
@@ -490,6 +603,7 @@ public class GameUIManager : MonoBehaviour {
 		return totalResources;
 	}
 
+	// Checks if the player has the required items, and if some are missing, then check if they are craftable
 	private Dictionary<CraftingItem, int> CheckItemRequirements(TaskItem taskItem) {
 		// Check if player is missing crafting items
 		Dictionary<CraftingItem, int> missingItems = new Dictionary<CraftingItem, int>();
@@ -569,85 +683,6 @@ public class GameUIManager : MonoBehaviour {
 			return missingItems;
 		}
 	}
-	
-//	public void DisplayTaskItemCraftWarning(int taskItemID) {
-//		taskItemCraftWarning.ToggleGroup (true);
-//		TaskItem taskItem = itemDatabase.FetchTaskItemByID (taskItemID);
-//		Debug.Assert (taskItem.ID != -1, "Unknown TaskItem ID: " + taskItemID + "; Should not happen.");
-//
-//		// clear itemsPanel
-//		ClearDisplay(taskItemCraftWarning.ItemsPanel);
-//
-//		// Check if player is missing crafting items
-//		Dictionary<CraftingItem, int> missingItems = new Dictionary<CraftingItem, int>();
-//		Dictionary<CraftingItem, int> requiredItems = taskItem.CraftingItems;
-//
-//		// loop through each item required for crafting
-//		foreach (CraftingItem key in requiredItems.Keys) {
-//			bool itemMissing = false;
-//			KeyValuePair<Item, int> craftingItem = inventoryDatabase.FetchItemWithQuantityByID (key.ID);
-//
-//			// Check if item exists in inventory
-//			if (craftingItem.Key.ID == -1) {
-//				missingItems.Add (key, requiredItems[key]);
-//				itemMissing = true;
-//
-//			// Check if there is enough items in player's inventory
-//			} else if (craftingItem.Value < requiredItems [key]) {
-//				missingItems.Add (key, requiredItems [key] - craftingItem.Value);
-//				itemMissing = true;
-//			}
-//
-//			// if item is doesn't exist in player's inventory OR player does not have enough 
-//			// instantiate a slot to display the item
-//			if (itemMissing) {
-//				InstantiateSlot (
-//					taskItemCraftWarning.Slot, 
-//					taskItemCraftWarning.ItemsPanel.transform, 
-//					key.Sprite, 
-//					SetStringColor (missingItems [key].ToString (), "red")
-//				);
-//			}
-//		}
-//
-//		// Calculate total resources required to craft the TaskITem
-//		Dictionary<ResourceType, int> totalResources = taskItem.RequiredResources;
-//		Dictionary<ResourceType, int> currentResources = new Dictionary<ResourceType, int> ();
-//
-//		// Get the relevant resources from the resource database according to what resources are required to craft
-//		foreach (ResourceType key in totalResources.Keys) {
-//			Resource resource = resourceDatabase.FetchResourceByID ((int)key);
-//
-//			// Can check resources here ------------
-//
-//			currentResources.Add (key, resource.Quantity);
-//		}
-//
-//		// Loop through each missting item
-//		foreach (CraftingItem key in missingItems.Keys) {
-////			Resource resource = resourceDatabase.FetchResourceByID ((int)key);
-//			Dictionary<ResourceType, int> requiredResources = key.RequiredResources;
-//
-//			// loop through each resource required to craft this item
-//			foreach(ResourceType resourceType in requiredResources.Keys) {
-//				// Check if total resources list has the current resource type
-//				if (totalResources.ContainsKey(resourceType)) {
-//					totalResources[resourceType] += missingItems[key] * requiredResources[resourceType];
-//
-//				// if not then add a new resource type
-//				} else {
-//					totalResources.Add(resourceType, missingItems[key] * requiredResources[resourceType]);
-//				}
-//			}
-//			
-//
-//		}
-//
-//		// Display the text
-////		taskItemCraftWarning.SetBreakdownText(taskItemID, totalResources);
-//
-//		// Hook up craftButton
-//	}
 
 }
 
@@ -655,11 +690,13 @@ public class GameUIManager : MonoBehaviour {
 public class ItemUIGroup : System.Object {
 	public GameObject groupObject;
 
+	protected GameUIManager UIManager;
 	protected Image icon;
 	protected List<Text> textList = new List<Text> ();
 	protected Button craftButton;
 	protected ItemDatabase itemDatabase;
 	protected ResourceDatabase resourceDatabase;
+	protected InventoryDatabase inventory;
 
 	public bool isDisplaying = true;
 
@@ -676,9 +713,11 @@ public class ItemUIGroup : System.Object {
 	}
 
 	public virtual void GetChildren() {
+		UIManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameUIManager> ();
 		GameObject databases = GameObject.FindGameObjectWithTag ("Databases");
 		itemDatabase = databases.GetComponent<ItemDatabase> ();
 		resourceDatabase = databases.GetComponent<ResourceDatabase> ();
+		inventory = databases.GetComponent<InventoryDatabase> ();
 
 		Transform groupTransform = groupObject.transform;
 
@@ -693,19 +732,26 @@ public class ItemUIGroup : System.Object {
 
 		// Get Button
 		craftButton = groupTransform.GetChild (2).GetComponent<Button> ();
+
 	}
 
-	public virtual void SetBreakdownText (int itemID) {
-
+	public void SetBreakdownText (int itemID) {
+		
 		CraftingItem craftingItem = itemDatabase.FetchCraftingItemByID (itemID);
 		Debug.Assert (craftingItem.ID != -1, "Invalid id: " + itemID);
 
-		string resourceList = GenerateResourceList(craftingItem.RequiredResources);
+		bool hasResources = false;
 
 		icon.sprite = craftingItem.Sprite;
 		textList [0].text = craftingItem.Title;
 		textList [1].text = craftingItem.Description;
-		textList [2].text = resourceList;
+		this.RefreshResources (craftingItem);
+
+		hasResources = CheckResourceRequirements (craftingItem);
+		craftButton.enabled = hasResources;
+		if (hasResources) {
+			craftButton.onClick.AddListener (() => CraftItem (craftingItem));
+		}
 	}
 
 	protected virtual string GenerateResourceList(Dictionary<ResourceType, int> requiredResources) {
@@ -737,9 +783,44 @@ public class ItemUIGroup : System.Object {
 		return resourceList;
 	}
 
+	public void CraftItem(CraftingItem item) {
+		inventory.AddItemByID (item.ID);
+		foreach (ResourceType key in item.RequiredResources.Keys) {
+			resourceDatabase.RemoveResourceByID (key, item.RequiredResources [key]);
+
+		}
+		Debug.Log ("Item Added");
+
+		this.RefreshResources (item);
+	}
+
+	private bool CheckResourceRequirements(CraftingItem craftingItem) {
+		bool hasResources = true;
+		Resource resource = new Resource ();
+		foreach (ResourceType key in craftingItem.RequiredResources.Keys) {
+			resource = resourceDatabase.FetchResourceByID ((int)key);
+			if (resource.Quantity < craftingItem.RequiredResources [key]) {
+				hasResources = false;
+			}
+		}
+
+		return hasResources;
+	}
+
 
 	public virtual void ToggleGroup(bool state) {
+		// if object was turned off some other way
+		if (isDisplaying && state) {
+			this.craftButton.onClick.RemoveAllListeners ();
+		}
+		isDisplaying = state;
 		groupObject.SetActive (state);
+		if (!state) {
+			this.craftButton.onClick.RemoveAllListeners ();
+			UIManager.TurnOffTopPanel ();
+		} else {
+			UIManager.AddPanelToHierachy (groupObject);
+		}
 	}
 
 	// Uses string markup to change color of text
@@ -747,12 +828,23 @@ public class ItemUIGroup : System.Object {
 		text = "<color=" + color + ">" + text + "</color>";
 		return text;
 	}
+
+	/// <summary>
+	/// Refreshes the resource text.
+	/// </summary>
+	/// <param name="craftingItem">The crafting item in which to reference.</param>
+	/// <param name="index">Index of the resource Text object in the TextsList</param>
+	protected void RefreshResources(CraftingItem craftingItem, int index = 2) {
+		this.textList [index].text = GenerateResourceList(craftingItem.RequiredResources);
+	}
 }
 
 [System.Serializable]
 public class TaskItemUIGroup : ItemUIGroup {
 	protected GameObject itemsPanel;
 	public GameObject slot;
+
+	protected TaskManager taskManager;
 
 	public GameObject ItemsPanel {
 		get { return itemsPanel; }
@@ -763,23 +855,42 @@ public class TaskItemUIGroup : ItemUIGroup {
 	}
 
 	public override void GetChildren() {
+		taskManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TaskManager> ();
 		base.GetChildren ();
 
 		itemsPanel = groupObject.transform.GetChild (3).gameObject;
 	}
 
-	public override void SetBreakdownText (int taskItemID) {
-
+	public void SetBreakdownText (int taskItemID) {
 		TaskItem taskItem = itemDatabase.FetchTaskItemByID (taskItemID);
 		Debug.Assert (taskItem.ID != -1, "Item id: " + taskItemID + " is not a TaskItem.");
 
-		string resourceList = GenerateResourceList(taskItem.RequiredResources);
+//		string resourceList = GenerateResourceList(taskItem.RequiredResources);
 
 		// Displays the texts in their respective Text; is in a specific order based on the hierarchy 
 		textList [0].text = taskItem.Title; // Name
 		textList [1].text = taskItem.Description; // Description
-		textList [2].text = resourceList; // Resources required
-		
+//		textList [2].text = resourceList; // Resources required
+		this.RefreshResources(taskItem);
+
+//		inventory.AddItemByID (10, 21);
+//		Debug.Log ("added Item");
+	}
+
+
+	public void CraftTaskItem(TaskItem taskItem) {
+		taskManager.AddActiveTaskItem (taskItem, 1);
+		taskManager.RemoveItems (taskItem.CraftingItems);
+		taskManager.RemoveResources (taskItem.RequiredResources);
+	}
+
+	/// <summary>
+	/// Refreshes the resource text.
+	/// </summary>
+	/// <param name="craftingItem">The crafting item in which to reference.</param>
+	/// <param name="index">Index of the resource Text object in the TextsList</param>
+	public void RefreshResources(TaskItem taskItem, int index = 2) {
+		this.textList [index].text = GenerateResourceList(taskItem.RequiredResources);
 	}
 }
 
@@ -801,7 +912,7 @@ public class TaskUIGroup : TaskItemUIGroup {
 		progressSlider = groupObject.transform.GetChild (3).GetComponent<Slider> ();
 	}
 
-	public override void SetBreakdownText (int taskID) {
+	public void SetBreakdownText (int taskID) {
 		Task task = taskDatabase.FetchTaskByID (taskID);
 		Debug.Assert (task.ID != -1, "Unknown taskID: " + taskID);
 
@@ -814,6 +925,16 @@ public class TaskUIGroup : TaskItemUIGroup {
 		progressSlider.value = progress.x / progress.y;
 	}
 
+	public override void ToggleGroup (bool state)
+	{
+		isDisplaying = state;
+		groupObject.SetActive (state);
+		if (state) {
+			UIManager.AddPanelToHierachy (groupObject);
+		} else {
+			UIManager.TurnOffTopPanel ();
+		}
+	}
 }
 
 [System.Serializable]
@@ -829,6 +950,8 @@ public class TaskItemCraftWarning : TaskItemUIGroup {
 		title = groupObject.transform.GetChild (1).transform.GetChild(5).GetComponent<Text>();
 
 		cancelButton = groupObject.transform.GetChild (4).GetComponent<Button> ();
+
+		cancelButton.onClick.AddListener (() => CancelButton ());
 	}
 
 	public void SetBreakdownText (int taskItemID, Dictionary<ResourceType, int> resourcesRequired, string description, string titleText, bool canCraft = true) {
@@ -841,18 +964,31 @@ public class TaskItemCraftWarning : TaskItemUIGroup {
 		// Displays the texts in their respective Text; is in a specific order based on the hierarchy 
 		textList [0].text = taskItem.Title; // Name
 		textList [1].text = description; // Description
-		textList [2].text = resourceList; // Resources required
+		textList [2].text = resourceList;
 
 		title.text = titleText; // Change title
 
 		craftButton.enabled = canCraft;
-		
-		cancelButton.onClick.AddListener (delegate {
-			CancelButton ();
-		});
 	}
 
 	public void CancelButton() {
 		this.ToggleGroup (false);
+	}
+
+	public void CraftTaskItem(TaskItem taskItem, Dictionary<CraftingItem, int> missingItems, Dictionary<ResourceType, int> totalResources) {
+		Dictionary<CraftingItem, int> itemsToRemove = new Dictionary<CraftingItem, int> ();
+
+		ToggleGroup (false);
+
+		foreach (CraftingItem key in missingItems.Keys) {
+			itemsToRemove.Add (key, taskItem.CraftingItems [key] - missingItems [key]);
+			Debug.Assert (itemsToRemove [key] >= 0, "This should not happen.");
+		}
+
+		taskManager.AddActiveTaskItem (taskItem, 1);
+		taskManager.RemoveItems (itemsToRemove);
+		taskManager.RemoveResources (totalResources);
+
+		RefreshResources (taskItem);
 	}
 }

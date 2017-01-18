@@ -31,7 +31,7 @@ public class Resource {
 		this.Slug = slug;
 		this.Description = desc;
 		this.RubbishType = type;
-		this.Quantity = 500;
+		this.Quantity = 0;
 
 	}
 

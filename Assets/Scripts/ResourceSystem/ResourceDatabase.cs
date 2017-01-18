@@ -42,6 +42,12 @@ public class ResourceDatabase : MonoBehaviour {
 		return database [0];
 	}
 
+	// Removes an amount of resource
+	public void RemoveResourceByID(ResourceType type, int quantity) {
+		database [(int)type].Quantity -= quantity;
+		Debug.Assert (database [(int)type].Quantity > 0, "Should not happen. Resource quantities should always be positive.");
+	}
+
 	public int DatabaseLength {
 		get {
 			return database.Count;

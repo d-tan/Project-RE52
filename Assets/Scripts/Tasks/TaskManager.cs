@@ -9,6 +9,8 @@ public class TaskManager : MonoBehaviour {
 
 	TaskDatabase taskDatabase;
 	ItemDatabase itemDatabase;
+	InventoryDatabase inventory;
+	ResourceDatabase resourceDatabase;
 	GameUIManager UIManager;
 
 	private float timer = 0.0f;
@@ -19,6 +21,8 @@ public class TaskManager : MonoBehaviour {
 		GameObject databases = GameObject.FindGameObjectWithTag ("Databases");
 		taskDatabase = databases.GetComponent<TaskDatabase> ();
 		itemDatabase = databases.GetComponent<ItemDatabase> ();
+		inventory = databases.GetComponent<InventoryDatabase> ();
+		resourceDatabase = databases.GetComponent<ResourceDatabase> ();
 		UIManager = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameUIManager> ();
 
 		ConstructActiveTaskItemsList ();
@@ -35,7 +39,24 @@ public class TaskManager : MonoBehaviour {
 
 	public void AddActiveTaskItem(TaskItem taskItem, int quantity, int sign = 1) {
 		activeTaskItems [taskItem] += sign * quantity;
-		Debug.Log (taskItem.Title + " quantity: " + activeTaskItems [taskItem]);
+//		Debug.Log (taskItem.Title + " quantity: " + activeTaskItems [taskItem]);
+	}
+
+	public void RemoveItems(Dictionary<CraftingItem, int> items) {
+		foreach (CraftingItem key in items.Keys) {
+			if (key.ID != -1 && items[key] != 0) {
+				inventory.RemoveItemByID (key.ID, items [key]);
+			}
+		}
+	}
+
+	public void RemoveResources(Dictionary<ResourceType, int> resources) {
+		foreach (ResourceType key in resources.Keys) {
+			if (key != ResourceType.Unknown) {
+//				Debug.Log (key + " " + resources [key]);
+				resourceDatabase.RemoveResourceByID (key, resources [key]);
+			}
+		}
 	}
 
 	void Update() {

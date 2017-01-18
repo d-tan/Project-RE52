@@ -10,7 +10,6 @@ public class InventoryDatabase : MonoBehaviour {
 
 	void Start() {
 		itemDatabase = GameObject.FindGameObjectWithTag ("Databases").GetComponent<ItemDatabase> ();
-
 	}
 
 	public Dictionary<Item, int> Inventory { 
