@@ -69,7 +69,17 @@ public class UpgradeDatabase : MonoBehaviour {
 			}
 		}
 
-		return database [0];
+		return new Upgrade ();
+	}
+
+	public Upgrade FetchUpgradeBySection(UpgradeSection section) {
+		for (int i = 0; i < database.Count; i++) {
+			if (database [i].Section == section) {
+				return database [i];
+			}
+		}
+
+		return new Upgrade ();
 	}
 
 	public int DatabaseCount {

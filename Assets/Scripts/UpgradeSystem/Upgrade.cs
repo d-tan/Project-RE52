@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Upgrade {
 	public int ID { get; set; }
@@ -9,7 +9,9 @@ public class Upgrade {
 	public string Description { get; set; }
 	public UpgradeSection Section { get; set; }
 	public Dictionary<int, int> Items { get; set; } // <ID, quantity>
-	public Dictionary<int, int> Resources { get; set; } // <ID, quantity>
+	public Dictionary<int, int> RequiredResources { get; set; } // <ID, quantity>
+
+	public Sprite Icon { get; set; }
 
 	public Upgrade (int id, string title, string slug, string description, UpgradeSection section, Dictionary<int, int> items, Dictionary<int, int> resources) {
 		this.ID = id;
@@ -18,6 +20,12 @@ public class Upgrade {
 		this.Description = description;
 		this.Section = section;
 		this.Items = items;
-		this.Resources = resources;
+		this.RequiredResources = resources;
+
+		this.Icon = Resources.Load<Sprite> ("Sprites/Upgrades/" + slug);
+	}
+
+	public Upgrade () {
+		this.ID = -1;
 	}
 }

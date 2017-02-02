@@ -29,6 +29,14 @@ public class TaskManager : MonoBehaviour {
 		ConstructTaskItemTasks ();
 	}
 
+	public int FetchActiveTaskItem(TaskItem taskItem) {
+		if (activeTaskItems.ContainsKey (taskItem)) {
+			return activeTaskItems [taskItem];
+		} else {
+			return -1;
+		}
+	}
+
 	private void ConstructActiveTaskItemsList() {
 		activeTaskItems = itemDatabase.ConstructTaskItemDictionary ();
 	}
@@ -72,7 +80,14 @@ public class TaskManager : MonoBehaviour {
 		foreach (TaskItem key in activeTaskItems.Keys) {
 			if (activeTaskItems [key] > 0) {
 				foreach (Task task in taskItemTasks[key]) {
-					task.Progress += taskRate * activeTaskItems [key];
+					if (!task.Completed) {
+						task.Progress += taskRate * activeTaskItems [key];
+					}
+
+					if (task.Progress >= 100.0f) {
+						task.Progress = 100.0f;
+						task.Completed = true;
+					}
 				}
 			}
 		}

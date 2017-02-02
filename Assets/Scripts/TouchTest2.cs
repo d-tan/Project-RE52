@@ -217,15 +217,15 @@ public class TouchTest2 : MonoBehaviour {
 	private bool DetermineSpeedTrend() {
 		const int countLimit = 4;
 		// tally
-		int up = 0;
-		int down = 0;
-		bool done = false;
+//		int up = 0;
+//		int down = 0;
+//		bool done = false;
 		// Alternating check
-		SpeedTrend alternatingCheck = SpeedTrend.Slowing_Down;
-		bool slowFirst = false;
-		bool phase1Pass = false;
-		bool alternating = false;
-		bool tally = true;
+//		SpeedTrend alternatingCheck = SpeedTrend.Slowing_Down;
+//		bool slowFirst = false;
+//		bool phase1Pass = false;
+//		bool alternating = false;
+//		bool tally = true;
 
 		bool flick = false;
 
@@ -442,7 +442,7 @@ public class TouchTest2 : MonoBehaviour {
 
 		// collect indexes of raycast hits that are pickupable
 		for (int i = 0; i < hits.Length; i++) {
-			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
+//			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
 			if (hits [i].transform.CompareTag ("PickUpable")) {
 				itemIndex = i;
 //				Debug.Log ("raycast: " + objectScript.RubbishItemID + 

@@ -67,7 +67,7 @@ public class Inventory : MonoBehaviour {
 					itemObject.GetComponent<ItemData> ().slotNum = i;
 					itemObject.transform.SetParent (slots [i].transform); // Set parent
 					itemObject.transform.position = Vector2.zero; // Set to centre
-					itemObject.GetComponent<Image> ().sprite = itemToAdd.Sprite; 
+					itemObject.GetComponent<Image> ().sprite = itemToAdd.Icon; 
 					itemObject.name = itemToAdd.Title;
 					break;
 				}

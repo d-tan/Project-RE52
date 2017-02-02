@@ -11,6 +11,10 @@ public class TouchManager : MonoBehaviour {
 	public TouchTest3 touch3;
 	public TouchTest4 touch4;
 
+	void Start() {
+		dropDown.value = 1;
+	}
+
 	private void DisableAll() {
 		touch2.enabled = false;
 		touch3.enabled = false;

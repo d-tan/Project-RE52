@@ -122,7 +122,7 @@ public class RubbishItemSpawner : MonoBehaviour {
 			rubbishTypes.Add (resourceDatabase.FetchResourceByID ((int)type).RubbishType);
 		}
 
-		spawnedObject.GetComponent<SpriteRenderer> ().sprite = item.Sprite; // set sprite
+		spawnedObject.GetComponent<SpriteRenderer> ().sprite = item.Icon; // set sprite
 		spawnedObjectScript.RubbishTypes = rubbishTypes; // set rubbish types
 		spawnedObjectScript.ResourceTypes = resourceTypes; // set resource types
 		PolygonCollider2D spawnedObjectCollider = spawnedObject.AddComponent<PolygonCollider2D> (); // give polygon collider

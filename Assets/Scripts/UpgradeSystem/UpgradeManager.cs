@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public enum UpgradeSection {
 	Head,
 	Torso,
-	Arms,
-	Legs,
-	RubbishCollector
+	Left_Arm,
+	Right_Arm,
+	Tracks,
+	Rubbish_Collector
 }
 
 public enum UpgradeNames {
@@ -46,30 +47,34 @@ public class UpgradeManager : MonoBehaviour {
 		rubbishSpawner = GameObject.FindGameObjectWithTag ("ConveyorBelt").GetComponent<RubbishItemSpawner> ();
 
 		upgradeDescriptions = new string[upgradesDatabase.DatabaseCount];
-		GenerateUpgradesStrings ();
-		UIManager.DisplayUpgradeText (upgradeDescriptions);
-		AddFunctionToUIButtons ();
+//		GenerateUpgradesStrings ();
+//		UIManager.DisplayUpgradeText (upgradeDescriptions);
+//		AddFunctionToUIButtons ();
 	}
 
 	void ImprovedAnalysisUpgrade() {
+		Debug.Log ("Analysis pressed");
 		if (CheckUpgradeIsAvaliable (UpgradeNames.Improved_Analysis)) {
 			rubbishSpawner.RarityThresholds = upgradedRarityThresholds;
 		}
 	}
 
 	void WiderGripUpgrade() {
+		Debug.Log ("Wider Grip pressed");
 		if (CheckUpgradeIsAvaliable (UpgradeNames.Wider_Grip)) {
 			Debug.Log ("Wider Grip Upgrade");
 		}
 	}
 
 	void Efficiency() {
+		Debug.Log ("Efficiency pressed");
 		if (CheckUpgradeIsAvaliable (UpgradeNames.Efficiency)) {
 			Debug.Log ("Efficiency Upgrade");
 		}
 	}
 
 	void MaxThroughput() {
+		Debug.Log ("Max Throughput pressed");
 		if (CheckUpgradeIsAvaliable (UpgradeNames.Max_Throughput)) {
 			Debug.Log ("Max Throughput Upgrade");
 		}
@@ -85,19 +90,19 @@ public class UpgradeManager : MonoBehaviour {
 		itemsAvaliable = CheckInventoryOrResources (itemsRequired, true);
 
 		// check resources if resources requirements are met
-		Dictionary<int, int> resourcesRequired = upgradeToCheck.Resources;
+		Dictionary<int, int> resourcesRequired = upgradeToCheck.RequiredResources;
 		resourcesAvaliable = CheckInventoryOrResources (resourcesRequired, false);
 
 		// Take from inventory + resources
 		if (itemsAvaliable && resourcesAvaliable) {
-			UIManager.DisableUpgradeButton (upgradeName);
+//			UIManager.DisableUpgradeButton (upgradeName);
 			TakeItemsOrResources (itemsRequired, true);
 			TakeItemsOrResources (resourcesRequired, false);
 
 			return true;
 		} else {
-			StopCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
-			StartCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
+//			StopCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
+//			StartCoroutine (UIManager.UpgradeUnavaliableFlash (upgradeName));
 			string message = "Unable to upgrade: \n";
 			string itemsMessage = "Insufficient items avaliable.\n";
 			string resourcesMessage = "Insufficient resources avaliable.\n";
@@ -173,80 +178,107 @@ public class UpgradeManager : MonoBehaviour {
 	}
 
 
-	private void AddFunctionToUIButtons() {
-		List<Button> buttons = new List<Button> ();
-		buttons = UIManager.GetUpgradeButtons ();
+//	private void AddFunctionToUIButtons() {
+//		List<Button> buttons = new List<Button> ();
+//		buttons = UIManager.GetUpgradeButtons ();
+//
+//		buttons [0].onClick.AddListener (delegate {
+//			ImprovedAnalysisUpgrade ();
+//		});
+//		buttons [1].onClick.AddListener (delegate {
+//			WiderGripUpgrade ();
+//		});
+//		buttons [2].onClick.AddListener (delegate {
+//			Efficiency ();
+//		});
+//		buttons [3].onClick.AddListener (delegate {
+//			MaxThroughput ();
+//		});
+//	}
 
-		buttons [0].onClick.AddListener (delegate {
-			ImprovedAnalysisUpgrade ();
-		});
-		buttons [1].onClick.AddListener (delegate {
-			WiderGripUpgrade ();
-		});
-		buttons [2].onClick.AddListener (delegate {
-			Efficiency ();
-		});
-		buttons [3].onClick.AddListener (delegate {
-			MaxThroughput ();
-		});
+	public void AddFunctionToUIButton(Button button, UpgradeSection section) {
+		button.onClick.RemoveAllListeners ();
+		switch (section) {
+		case UpgradeSection.Head:
+			button.onClick.AddListener (() => ImprovedAnalysisUpgrade ());
+			break;
+
+		case UpgradeSection.Left_Arm:
+			button.onClick.AddListener (() => WiderGripUpgrade ());
+			break;
+
+		case UpgradeSection.Right_Arm:
+			button.onClick.AddListener (() => Efficiency ());
+			break;
+
+		case UpgradeSection.Torso:
+			break;
+
+		case UpgradeSection.Tracks:
+			button.onClick.AddListener (() => MaxThroughput ());
+			break;
+
+		case UpgradeSection.Rubbish_Collector:
+			break;
+		}
 	}
 	
-	private void GenerateUpgradesStrings() {
-		for (int i = 0; i < upgradesDatabase.DatabaseCount; i++) {
-			Upgrade upgrade = upgradesDatabase.FetchUpgradeByID (i);
+//	private void GenerateUpgradesStrings() {
+//		for (int i = 0; i < upgradesDatabase.DatabaseCount; i++) {
+//			Upgrade upgrade = upgradesDatabase.FetchUpgradeByID (i);
+//
+//			string itemsNresources = "";
+//
+//			itemsNresources = GenerateItemsNResourcesString (upgrade);
+//
+////			Debug.Log(itemsNresources);
+//			upgradeDescriptions [i] = "<b>" + upgrade.Title + "</b>\n" + upgrade.Description + "\n" + itemsNresources;
+//		}
+//	}
 
-			string itemsNresources = "";
+//	// Generates items and resources list as a string, given an upgrade, for display
+//	private string GenerateItemsNResourcesString(Upgrade upgrade) {
+//		string[] items = new string[upgrade.Items.Count];
+//		string[] resources = new string[upgrade.RequiredResources.Count];
+////		bool itemsLonger = true; // determines if the items list is longer or the resource list
+//		string combinedString = "";
+//
+//		int j = 0; // foreach loop indexer
+//		// populate items string array to hold each string formulated
+//		foreach (int key in upgrade.Items.Keys) {
+//			items[j] = itemDatabase.FetchItemByID (key).Title + ": " + upgrade.Items [key];
+//			j++;
+//		}
+//		j = 0;
+//
+//		// populate resources string array to hold each string formulated
+//		foreach (int key in upgrade.RequiredResources.Keys) {
+//			resources[j] = resourceDatabase.FetchResourceByID (key).Title + ": " + upgrade.RequiredResources [key];
+//			j++;
+//		}
+//		j = 0;
+//
+//		// Check which string array is longer
+//		if (items.Length > resources.Length) {
+//			combinedString = CombineItemsNResourcesStrings (items, resources);
+//		} else {
+//			combinedString = CombineItemsNResourcesStrings (resources, items);
+//		}
+//
+//		return combinedString;
+//	}
 
-			itemsNresources = GenerateItemsNResourcesString (upgrade);
-
-//			Debug.Log(itemsNresources);
-			upgradeDescriptions [i] = "<b>" + upgrade.Title + "</b>\n" + upgrade.Description + "\n" + itemsNresources;
-		}
-	}
-
-	// Generates items and resources list as a string, given an upgrade, for display
-	private string GenerateItemsNResourcesString(Upgrade upgrade) {
-		string[] items = new string[upgrade.Items.Count];
-		string[] resources = new string[upgrade.Resources.Count];
-//		bool itemsLonger = true; // determines if the items list is longer or the resource list
-		string combinedString = "";
-
-		int j = 0; // foreach loop indexer
-		// populate items string array to hold each string formulated
-		foreach (int key in upgrade.Items.Keys) {
-			items[j] = itemDatabase.FetchItemByID (key).Title + ": " + upgrade.Items [key];
-			j++;
-		}
-		j = 0;
-
-		// populate resources string array to hold each string formulated
-		foreach (int key in upgrade.Resources.Keys) {
-			resources[j] = resourceDatabase.FetchResourceByID (key).Title + ": " + upgrade.Resources [key];
-			j++;
-		}
-		j = 0;
-
-		// Check which string array is longer
-		if (items.Length > resources.Length) {
-			combinedString = CombineItemsNResourcesStrings (items, resources);
-		} else {
-			combinedString = CombineItemsNResourcesStrings (resources, items);
-		}
-
-		return combinedString;
-	}
-
-	// Combines the 2 given string arrays assuming the longer array is first
-	private string CombineItemsNResourcesStrings(string[] longer, string[] shorter) {
-		string combinedString = "";
-		for (int i = 0; i < longer.Length; i++) {
-			if (i - (shorter.Length - 1) <= 0) {
-				combinedString += longer [i] + "\t\t" + shorter [i] + "\n";
-			} else {
-				combinedString += longer [i] + "\t\t\n";
-			}
-		}
-
-		return combinedString;
-	}
+//	// Combines the 2 given string arrays assuming the longer array is first
+//	private string CombineItemsNResourcesStrings(string[] longer, string[] shorter) {
+//		string combinedString = "";
+//		for (int i = 0; i < longer.Length; i++) {
+//			if (i - (shorter.Length - 1) <= 0) {
+//				combinedString += longer [i] + "\t\t" + shorter [i] + "\n";
+//			} else {
+//				combinedString += longer [i] + "\t\t\n";
+//			}
+//		}
+//
+//		return combinedString;
+//	}
 }

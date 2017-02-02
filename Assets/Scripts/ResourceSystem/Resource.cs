@@ -24,6 +24,7 @@ public class Resource {
 	public string Description { get; set; }
 	public RubbishType RubbishType { get; set; }
 	public int Quantity { get; set; }
+	public Sprite Icon { get; set; }
 
 	public Resource(int id, string title, string slug, string desc, RubbishType type) {
 		this.ID = id;
@@ -33,6 +34,7 @@ public class Resource {
 		this.RubbishType = type;
 		this.Quantity = 0;
 
+		this.Icon = Resources.Load<Sprite> ("Sprites/Resource_Sprites/" + slug);
 	}
 
 	public Resource() {

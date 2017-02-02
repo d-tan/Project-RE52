@@ -277,7 +277,8 @@ public class TouchTest3 : MonoBehaviour {
 
 		// collect indexes of raycast hits that are pickupable
 		for (int i = 0; i < hits.Length; i++) {
-			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
+			ShowBinStats (hits[i].transform.gameObject);
+//			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
 			if (hits [i].transform.CompareTag ("PickUpable")) {
 				itemIndex = i;
 //				Debug.Log ("raycast: " + objectScript.RubbishItemID + 
@@ -359,6 +360,15 @@ public class TouchTest3 : MonoBehaviour {
 
 		heldObject.rb.velocity = Vector2.zero; // reset velocity
 
+	}
+
+	// Checks if touched object is a bin, then call script's display text method
+	private void ShowBinStats(GameObject hitTarget) {
+		ItemCount targetScript = hitTarget.GetComponent<ItemCount> ();
+
+		if (targetScript) {
+			targetScript.DisplayText ();
+		}
 	}
 
 }

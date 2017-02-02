@@ -13,7 +13,7 @@ public class Item {
 	public ItemRarity Rarity { get; set; }
 
 
-	public Sprite Sprite { get; set; }
+	public Sprite Icon { get; set; }
 
 	public Item(int id, string title, string slug, string desc, Dictionary<ResourceType, int> resources, bool crafting, ItemRarity rare) {
 		this.ID = id;
@@ -24,7 +24,7 @@ public class Item {
 		this.IsCraftingItem = crafting;
 		this.Rarity = rare;
 
-		this.Sprite = Resources.Load<Sprite> ("Sprites/Items/" + slug);
+		this.Icon = Resources.Load<Sprite> ("Sprites/Items/" + slug);
 	}
 
 	public Item() {
@@ -50,7 +50,7 @@ public class CraftingItem : Item {
 		this.RequiredResources = requiredResources;
 		this.IsTaskItem = taskItem;
 
-		this.Sprite = Resources.Load<Sprite> ("Sprites/Items/" + slug);
+		this.Icon = Resources.Load<Sprite> ("Sprites/Items/" + slug);
 
 	}
 
@@ -66,7 +66,7 @@ public class CraftingItem : Item {
 		this.Craftable = craftable;
 		this.IsTaskItem = false;
 
-		this.Sprite = Resources.Load<Sprite> ("Sprites/Items/" + slug);
+		this.Icon = Resources.Load<Sprite> ("Sprites/Items/" + slug);
 
 	}
 
@@ -94,7 +94,7 @@ public class TaskItem : CraftingItem {
 		this.IsTaskItem = taskItem;
 		this.CraftingItems = craftingItems;
 
-		this.Sprite = Resources.Load<Sprite> ("Sprites/Items/" + slug);
+		this.Icon = Resources.Load<Sprite> ("Sprites/Items/" + slug);
 
 	}
 

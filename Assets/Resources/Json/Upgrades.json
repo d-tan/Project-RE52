@@ -3,7 +3,8 @@
 		"id" : 0,
 		"title" : "Improved Analysis",
 		"slug" : "improved_analysis",
-		"description" : "Improves analysis methods for identifying useful objects.",
+		"flavour" : "Improves analysis methods for identifying useful objects.",
+		"description" : "Increases the chance to find a rarer item.",
 		"section" : 0,
 		"requirements" : {
 			"items" : {
@@ -35,8 +36,9 @@
 		"id" : 1,
 		"title" : "Wider Grip",
 		"slug" : "wider_grip",
-		"description" : "A wider grips allows for more objects to be handled at once.",
-		"section" : 2,
+		"flavour" : "A wider grip allows for more objects to be handled at once.",
+		"description" : "Increases the number of items you can pick up.",
+		"section" : 3,
 		"requirements" : {
 			"items" : {
 				"IDs" : {
@@ -64,7 +66,8 @@
 		"id" : 2,
 		"title" : "Efficiency",
 		"slug" : "efficiency",
-		"description" : "Improved efficiency of sorting objects, allowing for better multiplier scores.",
+		"flavour" : "Improved efficiency of sorting objects, allowing for better multiplier scores.",
+		"description" : "Increases the multiplier timer.",
 		"section" : 2,
 		"requirements" : {
 			"items" : {
@@ -93,7 +96,8 @@
 		"id" : 3,
 		"title" : "Max Throughput",
 		"slug" : "max_throughput",
-		"description" : "Increases the Rubbish Collector 5000's power to improve throughput.",
+		"flavour" : "Increases the Rubbish Collector 5000's power to improve throughput.",
+		"description" : "Increases the rate of rubbish delivered.",
 		"section" : 4,
 		"requirements" : {
 			"items" : {

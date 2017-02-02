@@ -14,6 +14,7 @@ public class Task {
 	public Dictionary<TaskItem, int> TaskItems { get; set; } // TaskItem, number of this item Active (i.e. that are working)
 //	public Dictionary<TaskItem, int> MyTaskItems { get; set; }
 	public bool Completed { get; set; }
+	public Sprite Icon { get; set; }
 
 	public Task(int id, string title, string slug, string description, Dictionary<TaskItem, int> taskItems) {
 		this.ID = id;
@@ -24,6 +25,8 @@ public class Task {
 		this.TaskItems = taskItems;
 //		this.MyTaskItems = myItems;
 		this.Completed = false;
+
+		this.Icon = Resources.Load<Sprite> ("Sprites/Tasks/" + slug);
 	}
 
 	public Task() {

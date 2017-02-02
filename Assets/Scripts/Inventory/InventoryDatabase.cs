@@ -80,7 +80,7 @@ public class InventoryDatabase : MonoBehaviour {
 		List<Sprite> inventorySprites = new List<Sprite>();
 
 		foreach (Item key in inventory.Keys) {
-			inventorySprites.Add (key.Sprite);
+			inventorySprites.Add (key.Icon);
 		}
 
 		return inventorySprites;

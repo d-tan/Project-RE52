@@ -27,7 +27,7 @@ public class AngleTest : MonoBehaviour {
 
 //	Vector3 right = new Vector3();
 //	Vector3 left = new Vector3();
-	float magnitude = 5.0f;
+//	float magnitude = 5.0f;
 
 //	float width = 0.0f;
 //	float angleScale = 0.0f;

@@ -272,7 +272,7 @@ public class TouchTest4 : MonoBehaviour {
 
 		// collect indexes of raycast hits that are pickupable
 		for (int i = 0; i < hits.Length; i++) {
-			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
+//			RubbishItem objectScript = hits [i].transform.GetComponent<RubbishItem> ();
 			if (hits [i].transform.CompareTag ("PickUpable")) {
 				itemIndex = i;
 //				Debug.Log ("raycast: " + objectScript.RubbishItemID + 
