@@ -65,6 +65,11 @@ public class GameUIManager : MonoBehaviour {
 	public TaskItemCraft taskItemCraft;
 	ItemDatabase itemDatabase;
 
+
+	// HUD items sort
+	public HUDItemSort hudItem;
+
+
 	void Start() {
 //		indicatorColors [0] = new Color (1.0f, 103.0f / 255.0f, 103.0f / 255.0f, 160.0f / 255.0f);
 //		indicatorColors [1] = new Color (54.0f / 255.0f, 188.0f / 255.0f, 71.0f / 255.0f, 160.0f / 255.0f);
@@ -530,6 +535,45 @@ public class GameUIManager : MonoBehaviour {
 		taskItemCraft.CraftButton.onClick.AddListener (() => taskItemCraft.ToggleCraftPanel (false));
 		
 	}
+
+
+	GameObject hudItemSlot;
+	Item sortedItem;
+
+	public void CorrectItemSort(RubbishItem rubbishItem, int multiplier) {
+		if (hudItem.parentPanel.transform.childCount >= 3) {
+			for (int i = 0; i < hudItem.parentPanel.transform.childCount - 2; i++) {
+				Destroy(hudItem.parentPanel.transform.GetChild (i).gameObject);
+			}
+		}
+
+		hudItemSlot = Instantiate (hudItem.correct, hudItem.parentPanel.transform, false);
+
+		sortedItem = itemDatabase.FetchItemByID (rubbishItem.RubbishItemID);
+
+		Resource resource = new Resource ();
+		int quantity = 0;
+
+		foreach (ResourceType type in sortedItem.ResourcesGiven.Keys) {
+			resource = resourceDatabase.FetchResourceByID ((int)type);
+			quantity = sortedItem.ResourcesGiven [type];
+		}
+
+		hudItem.PopulateCorrect (hudItemSlot, sortedItem.Icon, quantity * multiplier, resource.Icon);
+	}
+
+	public void IncorrectItemSort(RubbishItem rubbishItem) {
+		if (hudItem.parentPanel.transform.childCount >= 3) {
+			Destroy(hudItem.parentPanel.transform.GetChild (0).gameObject);
+		}
+
+		hudItemSlot = Instantiate (hudItem.incorrect, hudItem.parentPanel.transform, false);
+
+		sortedItem = itemDatabase.FetchItemByID (rubbishItem.RubbishItemID);
+
+		hudItem.PopulateIncorrect (hudItemSlot, sortedItem.Icon);
+	}
+
 }
 
 [System.Serializable]
@@ -872,5 +916,27 @@ public class UpgradesUI : System.Object {
 		if (state) {
 			UIManager.AddPanelToHierachy (craftPanel, GameUIManager.Panels.Upgrades_);
 		}
+	}
+}
+
+[System.Serializable]
+public class HUDItemSort {
+
+	public GameObject correct;
+	public GameObject incorrect;
+	public GameObject parentPanel;
+
+	public void PopulateCorrect(GameObject correctSlot, Sprite item, int quantity, Sprite resource) {
+		Transform slotTransform = correctSlot.transform;
+
+		slotTransform.GetChild (0).GetComponent<Image> ().sprite = item;
+		slotTransform.GetChild (2).GetComponent<Text> ().text = quantity.ToString ();
+		slotTransform.GetChild (3).GetComponent<Image> ().sprite = resource;
+	}
+
+	public void PopulateIncorrect(GameObject incorrectSlot, Sprite item) {
+		Transform slotTransform = incorrectSlot.transform;
+
+		slotTransform.GetChild (2).GetComponent<Image> ().sprite = item;
 	}
 }

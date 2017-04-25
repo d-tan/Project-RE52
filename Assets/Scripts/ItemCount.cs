@@ -19,6 +19,7 @@ public class ItemCount : MonoBehaviour {
 
 	ResourceManager resourceManager;
 	ScoreManager scoreManager;
+	GameUIManager UImanager;
 
 	// Use this for initialization
 	void Start () {
@@ -32,6 +33,7 @@ public class ItemCount : MonoBehaviour {
 		GameObject managers = GameObject.FindGameObjectWithTag ("GameController");
 		scoreManager = managers.GetComponent<ScoreManager> ();
 		resourceManager = managers.GetComponent<ResourceManager> ();
+		UImanager = managers.GetComponent<GameUIManager> ();
 
 //		glowImage.color = new Color (originalColour.r, originalColour.g, originalColour.b, 150.0f/255.0f);
 		glowImage.color = new Color (1, 1, 1, 150.0f/255.0f);
@@ -74,9 +76,12 @@ public class ItemCount : MonoBehaviour {
 					}
 
 					resourceManager.AddResourceValue (otherScript.RubbishItemID, acceptedType, scoreManager.CurrentMultiplier);
+					UImanager.CorrectItemSort (otherScript, scoreManager.CurrentMultiplier);
+
 					StartCoroutine (CorrectFlash ());
 				} else {
 					scoreManager.AddMinusScore (acceptedType, -1);
+					UImanager.IncorrectItemSort (otherScript);
 					StartCoroutine (IncorrectFlash ());
 				}
 				DisplayText (true);

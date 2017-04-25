@@ -7,6 +7,7 @@ public class ResourceManager : MonoBehaviour {
 	ResourceDatabase resourceDatabase;
 	ItemDatabase itemDatabase;
 	GameUIManager UIManager;
+	List<Resource> itemsResources = new List<Resource>();
 
 	void Start() {
 		GameObject gameController = GameObject.FindGameObjectWithTag ("Databases");
@@ -17,7 +18,6 @@ public class ResourceManager : MonoBehaviour {
 
 	public void AddResourceValue(int itemID, RubbishType rubbishType, int multiplier, int sign = 1) {
 		Item item = itemDatabase.FetchItemByID (itemID);
-		List<Resource> itemsResources = new List<Resource>();
 		foreach (ResourceType key in item.ResourcesGiven.Keys) {
 			itemsResources.Add (resourceDatabase.FetchResourceByID ((int)key));
 		}
@@ -31,6 +31,7 @@ public class ResourceManager : MonoBehaviour {
 			}
 		}
 
+		itemsResources.Clear ();
 	}
 
 	// for displaying in UI

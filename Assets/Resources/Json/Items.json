@@ -146,7 +146,7 @@
 		"description" : "A small part of a tree.",
 		"resources" : {
 			"types" : {
-				"0" : 5
+				"0" : 6
 			},
 			"quantities" : {
 				"0" : 4
